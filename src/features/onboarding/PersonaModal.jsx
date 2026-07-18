@@ -67,7 +67,7 @@ function PersonaModal({ open, onClose }) {
 						type="button"
 						onClick={onClose}
 						disabled={mutation.isPending}
-						className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+						className="neo-btn-secondary disabled:cursor-not-allowed disabled:opacity-60"
 					>
 						Cancel
 					</button>
@@ -75,7 +75,7 @@ function PersonaModal({ open, onClose }) {
 						type="submit"
 						form="persona-form"
 						disabled={mutation.isPending}
-						className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+						className="neo-btn-primary disabled:cursor-not-allowed disabled:opacity-60"
 					>
 						{mutation.isPending ? 'Saving...' : 'Save persona'}
 					</button>
@@ -100,7 +100,7 @@ function PersonaModal({ open, onClose }) {
 						name="courseYear"
 						value={form.courseYear}
 						onChange={handleChange}
-						className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-900"
+						className="neo-input"
 					/>
 				</label>
 
@@ -113,7 +113,7 @@ function PersonaModal({ open, onClose }) {
 							name="preferredTime"
 							value={form.preferredTime}
 							onChange={handleChange}
-							className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-900"
+							className="neo-input"
 						>
 							<option value="morning">Morning</option>
 							<option value="afternoon">Afternoon</option>
@@ -132,25 +132,25 @@ function PersonaModal({ open, onClose }) {
 							name="maxHoursPerDay"
 							value={form.maxHoursPerDay}
 							onChange={handleChange}
-							className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-900"
+							className="neo-input"
 						/>
 					</label>
 				</div>
 
-				<label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+				<label className="flex items-center gap-3 rounded-xl border border-neo-100 bg-neo-50/50 px-4 py-3 transition-colors hover:border-neo-200">
 					<input
 						type="checkbox"
 						name="studyOnWeekends"
 						checked={form.studyOnWeekends}
 						onChange={handleChange}
-						className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+						className="h-4 w-4 rounded border-neo-300 text-neo-600 focus:ring-neo-400"
 					/>
 					<span className="text-sm font-medium text-slate-700">
 						Allow weekend study sessions
 					</span>
 				</label>
 
-				<div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+				<div className="rounded-xl border border-neo-100 bg-neo-50/50 px-4 py-3 text-sm text-slate-600">
 					{mutation.isPending ? (
 						<div className="flex items-center justify-between gap-4">
 							<span>Saving persona settings...</span>

@@ -1,5 +1,6 @@
 import Modal from '../../components/ui/Modal.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
+import { translateStatus } from '../../i18n/formatters.js';
 
 function formatSessionTime(value, language) {
 	if (!value) {
@@ -29,22 +30,16 @@ function SessionDetailsModal({
 		<Modal
 			open={isOpen}
 			onClose={onClose}
+			closeLabel={t('common.closeModal')}
 			title={t('calendar.sessionModalTitle')}
 			description={t('calendar.sessionModalDescription')}
 			footer={
 				<div className="flex flex-wrap items-center justify-end gap-3">
 					<button
 						type="button"
-						onClick={onClose}
-						className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-					>
-						{t('calendar.close')}
-					</button>
-					<button
-						type="button"
 						onClick={onMarkCompleted}
 						disabled={isCompleted || isPending}
-						className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition enabled:hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+						className="neo-btn-primary disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{isPending
 							? t('calendar.updatingSession')
@@ -55,34 +50,34 @@ function SessionDetailsModal({
 		>
 			{session ? (
 				<div className="space-y-4">
-					<div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-						<p className="text-sm font-medium text-slate-500">
+					<div className="rounded-xl border border-neo-100 bg-gradient-to-br from-neo-50 to-white px-4 py-3">
+						<p className="text-sm font-medium text-neo-600">
 							{t('calendar.sessionTitle')}
 						</p>
-						<p className="mt-1 text-base font-semibold text-slate-900">
+						<p className="mt-1 text-base font-bold text-slate-900">
 							{session.title}
 						</p>
 					</div>
 					<div className="grid gap-3 sm:grid-cols-2">
-						<div className="rounded-xl border border-slate-200 px-4 py-3">
-							<p className="text-sm font-medium text-slate-500">
+						<div className="rounded-xl border border-neo-100 px-4 py-3 transition-colors hover:border-neo-200 hover:bg-neo-50/30">
+							<p className="text-sm font-medium text-neo-600">
 								{t('calendar.sessionCourse')}
 							</p>
 							<p className="mt-1 text-sm font-semibold text-slate-900">
 								{session.courseName}
 							</p>
 						</div>
-						<div className="rounded-xl border border-slate-200 px-4 py-3">
-							<p className="text-sm font-medium text-slate-500">
+						<div className="rounded-xl border border-neo-100 px-4 py-3 transition-colors hover:border-neo-200 hover:bg-neo-50/30">
+							<p className="text-sm font-medium text-neo-600">
 								{t('calendar.sessionStatus')}
 							</p>
 							<p className="mt-1 text-sm font-semibold text-slate-900">
-								{session.status}
+								{translateStatus(t, session.status)}
 							</p>
 						</div>
 					</div>
-					<div className="rounded-xl border border-slate-200 px-4 py-3">
-						<p className="text-sm font-medium text-slate-500">
+					<div className="rounded-xl border border-neo-100 px-4 py-3">
+						<p className="text-sm font-medium text-neo-600">
 							{t('calendar.sessionTime')}
 						</p>
 						<p className="mt-1 text-sm font-semibold text-slate-900">

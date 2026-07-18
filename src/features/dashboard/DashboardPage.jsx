@@ -9,25 +9,28 @@ import UpcomingDeadlines from './UpcomingDeadlines.jsx';
 
 function DashboardPage() {
 	const user = useAuthStore((state) => state.user);
-	const { t } = useI18n();
+	const { t, language } = useI18n();
 	const query = useQuery({
-		queryKey: ['dashboard'],
-		queryFn: getDashboard,
+		queryKey: ['dashboard', language],
+		queryFn: () => getDashboard(language),
 	});
 
 	const data = query.data;
 
 	return (
 		<section className="space-y-6">
-			<div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-				<div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+			<div className="neo-card-lg relative overflow-hidden">
+				<div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-neo-200/30 blur-2xl" />
+				<div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
 					<div className="max-w-2xl">
-						<p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-							{t('dashboard.title')}
-						</p>
-						<h2 className="mt-2 text-3xl font-semibold text-slate-900">
+						<p className="neo-label">{t('dashboard.title')}</p>
+						<h2 className="mt-2 text-3xl font-bold text-slate-900">
 							{t('dashboard.greeting')}
-							{user?.name ? `, ${user.name}` : ''}
+							{user?.name ? (
+								<span className="text-gradient-neo">, {user.name}</span>
+							) : (
+								''
+							)}
 						</h2>
 						<p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
 							{t('dashboard.description')}
@@ -35,10 +38,8 @@ function DashboardPage() {
 					</div>
 
 					<div className="flex items-center gap-3">
-						<span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-600">
-							{t('dashboard.statusMonth')}
-						</span>
-						<span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-600">
+						<span className="neo-badge">{t('dashboard.statusMonth')}</span>
+						<span className="neo-badge border-neo-300/60 bg-neo-gradient text-white">
 							{t('dashboard.statusReady')}
 						</span>
 					</div>
@@ -46,7 +47,7 @@ function DashboardPage() {
 			</div>
 
 			{query.isLoading ? (
-				<div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500 shadow-sm">
+				<div className="neo-card-lg border-dashed text-center text-neo-600">
 					{t('dashboard.loading')}
 				</div>
 			) : null}
@@ -67,29 +68,23 @@ function DashboardPage() {
 						/>
 
 						<div className="grid gap-4 md:grid-cols-3">
-							<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-								<p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-									{t('dashboard.projects')}
-								</p>
-								<p className="mt-3 text-2xl font-semibold text-slate-900">
+							<div className="neo-stat-card">
+								<p className="neo-label">{t('dashboard.projects')}</p>
+								<p className="mt-3 text-2xl font-bold text-slate-900">
 									{data.overallProgress.completedProjects}/
 									{data.overallProgress.totalProjects}
 								</p>
 							</div>
-							<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-								<p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-									{t('dashboard.sessions')}
-								</p>
-								<p className="mt-3 text-2xl font-semibold text-slate-900">
+							<div className="neo-stat-card">
+								<p className="neo-label">{t('dashboard.sessions')}</p>
+								<p className="mt-3 text-2xl font-bold text-gradient-neo">
 									{data.overallProgress.completedSessions}/
 									{data.overallProgress.totalSessions}
 								</p>
 							</div>
-							<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-								<p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-									{t('dashboard.completion')}
-								</p>
-								<p className="mt-3 text-2xl font-semibold text-slate-900">
+							<div className="neo-stat-card">
+								<p className="neo-label">{t('dashboard.completion')}</p>
+								<p className="mt-3 text-2xl font-bold text-gradient-neo">
 									{data.overallProgress.percentage}%
 								</p>
 							</div>

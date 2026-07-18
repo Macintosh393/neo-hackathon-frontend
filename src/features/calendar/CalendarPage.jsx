@@ -13,15 +13,16 @@ function CalendarPage() {
 	const [selectedSession, setSelectedSession] = useState(null);
 	const queryClient = useQueryClient();
 	const { t, language } = useI18n();
-	const grid = useCalendarGrid(currentMonthDate);
+	const grid = useCalendarGrid(currentMonthDate, language);
 
 	const query = useQuery({
-		queryKey: ['calendar-view', grid.startDate, grid.endDate],
-		queryFn: () => getCalendarView(grid.startDate, grid.endDate),
+		queryKey: ['calendar-view', grid.startDate, grid.endDate, language],
+		queryFn: () => getCalendarView(grid.startDate, grid.endDate, language),
 	});
 
 	const updateSessionMutation = useMutation({
-		mutationFn: ({ id, payload }) => updateStudySession(id, payload),
+		mutationFn: ({ id, payload }) =>
+			updateStudySession(id, payload, language),
 		onSuccess: (updatedSession) => {
 			setSelectedSession(updatedSession);
 			queryClient.invalidateQueries({ queryKey: ['calendar-view'] });
@@ -60,15 +61,15 @@ function CalendarPage() {
 				}
 			/>
 
-			<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-				<div className="mb-4 grid grid-cols-7 gap-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+			<div className="neo-card-lg neo-grid-bg">
+				<div className="mb-4 grid grid-cols-7 gap-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-neo-600/70">
 					{t('calendar.weekdays').map((label) => (
 						<div key={label}>{label}</div>
 					))}
 				</div>
 
 				{query.isLoading ? (
-					<div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center text-slate-500">
+					<div className="rounded-xl border border-dashed border-neo-200 bg-neo-50/50 px-6 py-12 text-center text-neo-600">
 						{t('calendar.loading')}
 					</div>
 				) : null}
@@ -90,27 +91,21 @@ function CalendarPage() {
 			</div>
 
 			<div className="grid gap-4 md:grid-cols-3">
-				<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-					<p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-						{t('calendar.gridRange')}
-					</p>
-					<p className="mt-3 text-lg font-semibold text-slate-900">
+				<div className="neo-stat-card">
+					<p className="neo-label">{t('calendar.gridRange')}</p>
+					<p className="mt-3 text-lg font-bold text-slate-900">
 						{grid.startDate} → {grid.endDate}
 					</p>
 				</div>
-				<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-					<p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-						{t('calendar.daysInView')}
-					</p>
-					<p className="mt-3 text-lg font-semibold text-slate-900">
+				<div className="neo-stat-card">
+					<p className="neo-label">{t('calendar.daysInView')}</p>
+					<p className="mt-3 text-lg font-bold text-gradient-neo">
 						{query.data?.view.totalDays ?? 42}
 					</p>
 				</div>
-				<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-					<p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
-						{t('calendar.renderedItems')}
-					</p>
-					<p className="mt-3 text-lg font-semibold text-slate-900">
+				<div className="neo-stat-card">
+					<p className="neo-label">{t('calendar.renderedItems')}</p>
+					<p className="mt-3 text-lg font-bold text-gradient-neo">
 						{totalItems}
 					</p>
 				</div>
