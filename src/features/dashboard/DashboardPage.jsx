@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getDashboard } from '../../api/calendar.api.js';
+import { getDashboardStats } from '../../api/dashboard.api.js';
 import useI18n from '../../i18n/useI18n.js';
 import useAuthStore from '../../store/useAuthStore.js';
 import CourseList from './CourseList.jsx';
@@ -12,7 +12,7 @@ function DashboardPage() {
 	const { t, language } = useI18n();
 	const query = useQuery({
 		queryKey: ['dashboard', language],
-		queryFn: () => getDashboard(language),
+		queryFn: () => getDashboardStats(language),
 	});
 
 	const data = query.data;
