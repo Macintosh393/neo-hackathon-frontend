@@ -1,3 +1,4 @@
+
 ## Execution Plan: API-First & Component-Driven UI Development
 You must build the frontend iteratively, following a strict feature-sliced approach. Do not build UI components without first defining how they get their data.
 

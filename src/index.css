@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		font-family:
+			Inter,
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			sans-serif;
+		color: #0f172a;
+		background: #f8f6ff;
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+
+		--neo-primary: #5b18ee;
+		--neo-primary-light: #7c3aed;
+		--neo-primary-dark: #3b0a9e;
+		--neo-surface: #ffffff;
+		--neo-border: rgba(91, 24, 238, 0.12);
+		--neo-border-hover: rgba(91, 24, 238, 0.28);
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		min-width: 320px;
+		min-height: 100vh;
+		background: #f8f6ff;
+		color: #0f172a;
+	}
+
+	button,
+	input,
+	textarea,
+	select {
+		font: inherit;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	#root {
+		min-height: 100vh;
+	}
+}
+
+@layer components {
+	.neo-page {
+		@apply min-h-screen bg-neo-mesh text-slate-900;
+	}
+
+	.neo-header {
+		@apply border-b border-neo-200/60 bg-white/80 backdrop-blur-xl;
+		box-shadow: 0 1px 0 rgba(91, 24, 238, 0.06);
+	}
+
+	.neo-label {
+		@apply text-xs font-semibold uppercase tracking-[0.2em] text-neo-600/80;
+	}
+
+	.neo-card {
+		@apply rounded-2xl border border-neo-200/50 bg-white/90 p-5 shadow-card backdrop-blur-sm transition-all duration-300;
+	}
+
+	.neo-card-interactive {
+		@apply neo-card hover:-translate-y-0.5 hover:border-neo-300/60 hover:shadow-card-hover;
+	}
+
+	.neo-card-lg {
+		@apply rounded-2xl border border-neo-200/50 bg-white/90 p-6 shadow-card backdrop-blur-sm transition-all duration-300;
+	}
+
+	.neo-stat-card {
+		@apply neo-card-interactive relative overflow-hidden;
+	}
+
+	.neo-stat-card::before {
+		content: '';
+		@apply absolute left-0 top-0 h-full w-1 bg-neo-gradient opacity-0 transition-opacity duration-300;
+	}
+
+	.neo-stat-card:hover::before {
+		@apply opacity-100;
+	}
+
+	.neo-btn-primary {
+		@apply rounded-xl bg-neo-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-neo transition-all duration-200 hover:-translate-y-0.5 hover:shadow-neo-lg active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
+	}
+
+	.neo-btn-secondary {
+		@apply rounded-xl border border-neo-300/60 bg-white px-4 py-2.5 text-sm font-medium text-neo-700 transition-all duration-200 hover:border-neo-400 hover:bg-neo-50 hover:text-neo-800 disabled:cursor-not-allowed disabled:opacity-50;
+	}
+
+	.neo-btn-ghost {
+		@apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-neo-50 hover:text-neo-700;
+	}
+
+	.neo-nav-link {
+		@apply rounded-xl px-3.5 py-2 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-neo-50 hover:text-neo-700;
+	}
+
+	.neo-nav-link-active {
+		@apply rounded-xl bg-neo-gradient px-3.5 py-2 text-sm font-semibold text-white shadow-neo;
+	}
+
+	.neo-badge {
+		@apply inline-flex rounded-full border border-neo-200/60 bg-neo-50 px-3 py-1 text-xs font-medium text-neo-700;
+	}
+
+	.neo-badge-today {
+		@apply inline-flex h-7 w-7 items-center justify-center rounded-full bg-neo-gradient text-xs font-bold text-white shadow-neo;
+	}
+
+	.neo-progress-track {
+		@apply h-2 overflow-hidden rounded-full bg-neo-100;
+	}
+
+	.neo-progress-fill {
+		@apply h-full rounded-full bg-neo-gradient transition-all duration-500 ease-out;
+	}
+
+	.neo-input {
+		@apply w-full rounded-xl border border-neo-200/60 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-neo-400 focus:ring-2 focus:ring-neo-200;
+	}
+
+	.neo-list-item {
+		@apply rounded-xl border border-neo-100/80 bg-gradient-to-br from-white to-neo-50/30 px-4 py-4 transition-all duration-200 hover:border-neo-200 hover:shadow-sm;
+	}
+
+	.neo-day-cell {
+		@apply min-h-[128px] rounded-xl border p-3 transition-all duration-200;
+	}
+
+	.neo-day-cell-current {
+		@apply border-neo-200/60 bg-white hover:border-neo-300/70 hover:shadow-sm;
+	}
+
+	.neo-day-cell-other {
+		@apply border-transparent bg-neo-50/40 hover:bg-neo-50/70;
+	}
+
+	.neo-day-cell-today {
+		@apply ring-2 ring-neo-400/40 ring-offset-1;
+	}
+
+	.neo-event-pill {
+		@apply w-full rounded-lg border px-2 py-1 text-left text-[11px] leading-4 shadow-sm transition-all duration-200;
+	}
+
+	.neo-event-pill-interactive {
+		@apply cursor-pointer hover:-translate-y-px hover:shadow-md active:translate-y-0;
+	}
+
+	.neo-hero-gradient {
+		@apply bg-neo-gradient-dark;
+		background-image:
+			radial-gradient(ellipse 80% 50% at 20% 40%, rgba(124, 58, 237, 0.4) 0%, transparent 50%),
+			radial-gradient(ellipse 60% 40% at 80% 20%, rgba(91, 24, 238, 0.3) 0%, transparent 50%),
+			linear-gradient(160deg, #1a0447 0%, #2a0670 40%, #3b0a9e 100%);
+	}
+
+	.neo-grid-bg {
+		background-image:
+			linear-gradient(rgba(91, 24, 238, 0.04) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(91, 24, 238, 0.04) 1px, transparent 1px);
+		background-size: 24px 24px;
+	}
+}
+
+@layer utilities {
+	.text-gradient-neo {
+		@apply bg-neo-gradient bg-clip-text text-transparent;
+	}
+
+	.animate-in {
+		animation: fadeIn 0.5s ease-out, slideUp 0.5s ease-out;
+	}
+}
