@@ -1,9 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import UserProfileMenu from './UserProfileMenu.jsx';
 import useI18n from '../../i18n/useI18n.js';
+import useAuthStore from '../../store/useAuthStore.js';
+import PersonaModal from '../../features/onboarding/PersonaModal.jsx';
+import BatchImportModal from '../../features/onboarding/BatchImportModal.jsx';
+
 function AppLayout() {
 	const { language, t } = useI18n();
+	const user = useAuthStore((state) => state.user);
+	const [showBatchImport, setShowBatchImport] = useState(false);
 
 	useEffect(() => {
 		// Why: syncing the document language helps browser chrome and assistive tech use the selected locale.
@@ -56,6 +62,18 @@ function AppLayout() {
 			<main className="mx-auto max-w-6xl animate-in px-4 py-8 sm:px-6 lg:px-8">
 				<Outlet />
 			</main>
+
+			{user && !user.persona ? (
+				<PersonaModal
+					open={true}
+					onClose={() => setShowBatchImport(true)}
+				/>
+			) : null}
+
+			<BatchImportModal
+				open={showBatchImport}
+				onClose={() => setShowBatchImport(false)}
+			/>
 		</div>
 	);
 }

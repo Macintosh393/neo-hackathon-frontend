@@ -17,6 +17,9 @@ function DashboardPage() {
 
 	const data = query.data;
 
+	const displayName =
+		user?.name || [user?.firstName, user?.lastName].filter(Boolean).join(' ');
+
 	return (
 		<section className="space-y-6">
 			<div className="neo-card-lg relative overflow-hidden">
@@ -26,8 +29,8 @@ function DashboardPage() {
 						<p className="neo-label">{t('dashboard.title')}</p>
 						<h2 className="mt-2 text-3xl font-bold text-slate-900">
 							{t('dashboard.greeting')}
-							{user?.name ? (
-								<span className="text-gradient-neo">, {user.name}</span>
+							{displayName ? (
+								<span className="text-gradient-neo">, {displayName}</span>
 							) : (
 								''
 							)}

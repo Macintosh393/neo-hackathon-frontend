@@ -12,6 +12,7 @@ function LoginPage() {
 
 	const handleLogin = useGoogleLogin({
 		flow: 'auth-code',
+		scope: 'https://www.googleapis.com/auth/calendar',
 		onSuccess: async (codeResponse) => {
 			try {
 				const { token, user } = await authenticateWithGoogle(codeResponse.code);
