@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout.jsx';
 import AuthGuard from './features/auth/AuthGuard.jsx';
 import LoginPage from './features/auth/LoginPage.jsx';
@@ -15,7 +15,7 @@ function HomeRedirect() {
 function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<BrowserRouter>
+			<HashRouter>
 				<Routes>
 					<Route path="/login" element={<LoginPage />} />
 					<Route
@@ -32,7 +32,7 @@ function App() {
 					</Route>
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>
-			</BrowserRouter>
+			</HashRouter>
 		</QueryClientProvider>
 	);
 }
