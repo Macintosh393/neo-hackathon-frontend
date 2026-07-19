@@ -9,12 +9,14 @@ import CalendarHeader from './CalendarHeader.jsx';
 import DayDetailsModal from './DayDetailsModal.jsx';
 import MonthGrid from './MonthGrid.jsx';
 import SessionDetailsModal from './SessionDetailsModal.jsx';
+import ProjectDetailsModal from './ProjectDetailsModal.jsx';
 import useCalendarGrid from './useCalendarGrid.js';
 
 function CalendarPage() {
 	const [currentMonthDate, setCurrentMonthDate] = useState(() => new Date());
 	const [selectedSession, setSelectedSession] = useState(null);
 	const [selectedDay, setSelectedDay] = useState(null);
+	const [selectedProjectId, setSelectedProjectId] = useState(null);
 	const [viewMode, setViewMode] = useState('month');
 	const queryClient = useQueryClient();
 	const { t, language } = useI18n();
@@ -110,6 +112,7 @@ function CalendarPage() {
 						onDayClick={(date, dayData) =>
 							setSelectedDay({ date: formatDate(date), dayData })
 						}
+						onProjectClick={setSelectedProjectId}
 					/>
 				) : null}
 			</div>
@@ -155,6 +158,15 @@ function CalendarPage() {
 					setSelectedSession(session);
 					setSelectedDay(null);
 				}}
+				onProjectClick={(projectId) => {
+					setSelectedProjectId(projectId);
+					setSelectedDay(null);
+				}}
+			/>
+
+			<ProjectDetailsModal
+				projectId={selectedProjectId}
+				onClose={() => setSelectedProjectId(null)}
 			/>
 		</section>
 	);

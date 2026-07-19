@@ -29,7 +29,7 @@ function getUrgencyStyles(daysLeft) {
  * @param {Object} props
  * @param {Object[]} props.deadlines - List of upcoming deadlines.
  */
-function UpcomingDeadlines({ deadlines }) {
+function UpcomingDeadlines({ deadlines, onProjectClick }) {
 	const { t } = useI18n();
 	return (
 		<div className="neo-card-lg">
@@ -47,7 +47,11 @@ function UpcomingDeadlines({ deadlines }) {
 
 			<div className="mt-5 space-y-3">
 				{deadlines.map((deadline) => (
-					<div key={deadline.projectId} className="neo-list-item group">
+					<div
+						key={deadline.projectId}
+						onClick={() => onProjectClick?.(deadline.projectId)}
+						className="neo-list-item group cursor-pointer transition-all hover:border-neo-300 hover:shadow-neo/5"
+					>
 						<div className="flex items-start justify-between gap-4">
 							<div>
 								<p className="font-semibold text-slate-900 transition-colors group-hover:text-neo-700">

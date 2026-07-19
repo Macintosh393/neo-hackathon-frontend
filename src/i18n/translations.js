@@ -157,6 +157,19 @@ const translations = {
 		auth: {
 			preloaded: 'Підготовлений акаунт',
 		},
+		project: {
+			modalTitle: 'Деталі проєкту',
+			title: 'Назва проєкту',
+			course: 'Курс',
+			deadline: 'Дедлайн',
+			difficulty: 'Складність',
+			description: 'Опис',
+			noDescription: 'Опис відсутній',
+			sessions: 'Навчальні сесії',
+			noSessions: 'Навчальні сесії не заплановані',
+			status: 'Статус',
+			time: 'Час',
+		},
 	},
 	en: {
 		app: {
@@ -315,6 +328,19 @@ const translations = {
 		},
 		auth: {
 			preloaded: 'Preloaded account',
+		},
+		project: {
+			modalTitle: 'Project details',
+			title: 'Project Title',
+			course: 'Course',
+			deadline: 'Deadline',
+			difficulty: 'Difficulty',
+			description: 'Description',
+			noDescription: 'No description provided',
+			sessions: 'Study Sessions',
+			noSessions: 'No study sessions scheduled',
+			status: 'Status',
+			time: 'Time',
 		},
 	},
 };

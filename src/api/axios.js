@@ -1,6 +1,7 @@
 import axios from 'axios';
 import useAuthStore from '../store/useAuthStore.js';
 import useToastStore from '../store/useToastStore.js';
+import useLanguageStore from '../store/useLanguageStore.js';
 
 // Why: Use environment variables so we can easily point to different backend environments (local, staging, prod)
 const apiClient = axios.create({
@@ -26,9 +27,21 @@ function attachBearerToken(config, token) {
 
 apiClient.interceptors.request.use((config) => {
 	const token = useAuthStore.getState().token;
+	const language = useLanguageStore.getState().language;
 
 	if (token) {
 		attachBearerToken(config, token);
+	}
+
+	if (language) {
+		if (!config.headers) {
+			config.headers = {};
+		}
+		if (typeof config.headers.set === 'function') {
+			config.headers.set('Accept-Language', language);
+		} else {
+			config.headers['Accept-Language'] = language;
+		}
 	}
 
 	return config;

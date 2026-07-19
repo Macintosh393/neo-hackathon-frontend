@@ -10,6 +10,7 @@ function MonthGrid({
 	calendar = {},
 	onSessionClick,
 	onDayClick,
+	onProjectClick,
 }) {
 	const isWeek = dates.length === 7;
 
@@ -27,6 +28,7 @@ function MonthGrid({
 						dayData={calendar[dayKey]}
 						onSessionClick={onSessionClick}
 						onDayClick={onDayClick}
+						onProjectClick={onProjectClick}
 						isWeek={isWeek}
 					/>
 				);

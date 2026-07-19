@@ -13,6 +13,7 @@ function DayCell({
 	dayData,
 	onSessionClick,
 	onDayClick,
+	onProjectClick,
 	isWeek = false,
 }) {
 	const { t } = useI18n();
@@ -64,6 +65,7 @@ function DayCell({
 							title={item.title}
 							courseName={item.courseName}
 							estimatedDifficulty={item.estimatedDifficulty}
+							onClick={onProjectClick ? () => onProjectClick(item.projectId) : undefined}
 						/>
 					) : (
 						<EventPill

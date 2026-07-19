@@ -1,7 +1,8 @@
 import Modal from '../../components/ui/Modal.jsx';
 import EventPill from './EventPill.jsx';
+import DeadlinePill from './DeadlinePill.jsx';
 
-function DayDetailsModal({ open, onClose, date, dayData, t, language, onSessionClick }) {
+function DayDetailsModal({ open, onClose, date, dayData, t, language, onSessionClick, onProjectClick }) {
 	const isOpen = Boolean(open);
 	const items = [];
 	if (dayData) {
@@ -34,18 +35,28 @@ function DayDetailsModal({ open, onClose, date, dayData, t, language, onSessionC
 			{items.length ? (
 				<div className="space-y-3">
 					{items.map((item) => (
-						<EventPill
-							key={`${item.itemType}-${item.id ?? item.projectId}-${item.title}`}
-							title={item.title}
-							courseName={item.courseName}
-							status={item.status}
-							isCompromised={item.isCompromised}
-							onClick={
-								item.itemType === 'session'
-									? () => onSessionClick(item)
-									: undefined
-							}
-						/>
+						item.itemType === 'deadline' ? (
+							<DeadlinePill
+								key={`${item.itemType}-${item.projectId}-${item.title}`}
+								title={item.title}
+								courseName={item.courseName}
+								estimatedDifficulty={item.estimatedDifficulty}
+								onClick={onProjectClick ? () => onProjectClick(item.projectId) : undefined}
+							/>
+						) : (
+							<EventPill
+								key={`${item.itemType}-${item.id ?? item.projectId}-${item.title}`}
+								title={item.title}
+								courseName={item.courseName}
+								status={item.status}
+								isCompromised={item.isCompromised}
+								onClick={
+									item.itemType === 'session'
+										? () => onSessionClick(item)
+										: undefined
+								}
+							/>
+						)
 					))}
 				</div>
 			) : (
