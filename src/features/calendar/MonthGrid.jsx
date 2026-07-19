@@ -18,8 +18,9 @@ function MonthGrid({
 		<div
 			className="grid grid-cols-7 gap-1 sm:gap-3"
 		>
-			{dates.map((date) => {
+			{dates.map((date, index) => {
 				const dayKey = format(date, 'yyyy-MM-dd');
+				const isLastRow = dates.length > 7 && index >= dates.length - 7;
 				return (
 					<DayCell
 						key={dayKey}
@@ -30,6 +31,7 @@ function MonthGrid({
 						onDayClick={onDayClick}
 						onProjectClick={onProjectClick}
 						isWeek={isWeek}
+						isLastRow={isLastRow}
 					/>
 				);
 			})}

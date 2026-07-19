@@ -15,6 +15,7 @@ function DayCell({
 	onDayClick,
 	onProjectClick,
 	isWeek = false,
+	isLastRow = false,
 }) {
 	const { t } = useI18n();
 	const isCurrentMonth = isSameMonth(date, currentMonthDate);
@@ -89,7 +90,7 @@ function DayCell({
 							+{extraCount} {t('calendar.more')}
 						</div>
 						{showExtras ? (
-							<div className="absolute left-0 top-full z-40 w-64 rounded-lg border border-neo-200 bg-white p-3 shadow-lg space-y-1.5">
+							<div className={`absolute left-0 ${isLastRow ? 'bottom-full mb-1' : 'top-full mt-1'} z-50 w-64 rounded-lg border border-neo-200 bg-white p-3 shadow-lg space-y-1.5`}>
 								{extraItems.map((item, idx) => (
 									<EventPill
 										key={`${item.itemType}-${item.id ?? item.projectId}-${item.title}-${idx}`}
