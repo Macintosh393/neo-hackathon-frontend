@@ -71,6 +71,7 @@ const translations = {
 			markCompleted: 'Позначити як завершено',
 			updatingSession: 'Оновлення сесії...',
 			close: 'Закрити',
+			sessionUpdated: 'Статус сесії успішно оновлено!',
 			weekdays: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
 		},
 		status: {
@@ -120,6 +121,7 @@ const translations = {
 			savingHint: 'Збереження налаштувань профілю...',
 			hint: 'Ці значення використовуватимуться планувальником і майбутніми розрахунками календаря.',
 			error: 'Не вдалося зберегти налаштування профілю.',
+			saved: 'Налаштування профілю успішно збережено!',
 			timeMorning: 'Ранок',
 			timeAfternoon: 'День',
 			timeEvening: 'Вечір',
@@ -228,6 +230,7 @@ const translations = {
 			markCompleted: 'Mark as completed',
 			updatingSession: 'Updating session...',
 			close: 'Close',
+			sessionUpdated: 'Session status updated successfully!',
 			weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 		},
 		status: {
@@ -277,6 +280,7 @@ const translations = {
 			savingHint: 'Saving persona settings...',
 			hint: 'These values will be reused by the scheduler and future calendar calculations.',
 			error: 'Failed to save persona settings.',
+			saved: 'Profile settings saved successfully!',
 			timeMorning: 'Morning',
 			timeAfternoon: 'Afternoon',
 			timeEvening: 'Evening',

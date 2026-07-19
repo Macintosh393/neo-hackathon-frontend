@@ -15,7 +15,7 @@ function MonthGrid({
 
 	return (
 		<div
-			className={`grid gap-3 ${isWeek ? 'grid-cols-7' : 'sm:grid-cols-2 xl:grid-cols-7'}`}
+			className="grid grid-cols-7 gap-1 sm:gap-3"
 		>
 			{dates.map((date) => {
 				const dayKey = format(date, 'yyyy-MM-dd');

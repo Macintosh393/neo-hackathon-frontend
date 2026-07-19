@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { getCalendarView } from '../../api/calendar.api.js';
 import { updateSession } from '../../api/session.api.js';
 import useI18n from '../../i18n/useI18n.js';
+import useToastStore from '../../store/useToastStore.js';
 import CalendarHeader from './CalendarHeader.jsx';
 import DayDetailsModal from './DayDetailsModal.jsx';
 import MonthGrid from './MonthGrid.jsx';
@@ -30,6 +31,7 @@ function CalendarPage() {
 			setSelectedSession(updatedSession);
 			queryClient.invalidateQueries({ queryKey: ['calendar-view'] });
 			queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+			useToastStore.getState().addToast(t('calendar.sessionUpdated'), 'success');
 		},
 	});
 

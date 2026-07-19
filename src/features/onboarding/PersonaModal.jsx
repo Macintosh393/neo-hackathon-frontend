@@ -5,6 +5,7 @@ import Modal from '../../components/ui/Modal.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
 import useI18n from '../../i18n/useI18n.js';
 import useAuthStore from '../../store/useAuthStore.js';
+import useToastStore from '../../store/useToastStore.js';
 
 const DEFAULT_FORM = {
 	courseYear: 3,
@@ -29,6 +30,7 @@ function PersonaModal({ open, onClose }) {
 		onSuccess: (updatedUser) => {
 			// Why: the persona update should keep the same token alive while refreshing the user profile.
 			setAuth({ token, user: updatedUser });
+			useToastStore.getState().addToast(t('persona.saved'), 'success');
 			onClose?.();
 		},
 		onError: (error) => {

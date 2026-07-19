@@ -10,7 +10,7 @@ function CalendarHeader({
 }) {
 	const { t } = useI18n();
 	return (
-		<div className="neo-card-lg flex items-center justify-between gap-4 px-4 py-3">
+		<div className="neo-card-lg flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3">
 			<div className="flex items-center gap-2">
 				<button
 					type="button"

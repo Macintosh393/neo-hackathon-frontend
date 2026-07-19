@@ -119,7 +119,7 @@
 	}
 
 	.neo-badge-today {
-		@apply inline-flex h-7 w-7 items-center justify-center rounded-full bg-neo-gradient text-xs font-bold text-white shadow-neo;
+		@apply inline-flex h-5 w-5 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-neo-gradient text-[10px] sm:text-xs font-bold text-white shadow-neo;
 	}
 
 	.neo-progress-track {
@@ -155,7 +155,7 @@
 	}
 
 	.neo-day-cell {
-		@apply min-h-[128px] rounded-xl border p-3 transition-all duration-200;
+		@apply min-h-[60px] sm:min-h-[120px] md:min-h-[128px] rounded-lg sm:rounded-xl border p-1 sm:p-2.5 transition-all duration-200;
 	}
 
 	.neo-day-cell-current {
@@ -171,7 +171,7 @@
 	}
 
 	.neo-event-pill {
-		@apply w-full rounded-lg border px-2 py-1 text-left text-[11px] leading-4 shadow-sm transition-all duration-200;
+		@apply w-full rounded-md sm:rounded-lg border px-1 sm:px-2 py-0.5 sm:py-1 text-left text-[9px] sm:text-[11px] leading-3 sm:leading-4 shadow-sm transition-all duration-200;
 	}
 
 	.neo-event-pill-interactive {
