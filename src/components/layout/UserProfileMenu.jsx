@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import BatchImportModal from '../../features/onboarding/BatchImportModal.jsx';
+import PersonaModal from '../../features/onboarding/PersonaModal.jsx';
 import { interpolate } from '../../i18n/formatters.js';
 import useI18n from '../../i18n/useI18n.js';
 import useAuthStore from '../../store/useAuthStore.js';
 import LanguageSelect from '../ui/LanguageSelect.jsx';
-import ThemeSwitch from '../ui/ThemeSwitch.jsx';
 
 function ProfileIcon() {
 	return (
@@ -29,6 +30,8 @@ function UserProfileMenu() {
 	const { t } = useI18n();
 	const [open, setOpen] = useState(false);
 	const menuRef = useRef(null);
+	const [openPersona, setOpenPersona] = useState(false);
+	const [openImport, setOpenImport] = useState(false);
 
 	const displayName = user?.name ?? 'Аміна Коваленко';
 	const avatar = user?.avatar ?? displayName.slice(0, 2).toUpperCase();
@@ -70,7 +73,10 @@ function UserProfileMenu() {
 		<div ref={menuRef} className="relative">
 			<button
 				type="button"
-				onClick={() => setOpen((current) => !current)}
+				onClick={(e) => {
+					e.stopPropagation();
+					setOpen((current) => !current);
+				}}
 				aria-expanded={open}
 				aria-haspopup="true"
 				aria-label={t('app.profileMenu')}
@@ -84,7 +90,10 @@ function UserProfileMenu() {
 			</button>
 
 			{open ? (
-				<div className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-72 overflow-hidden rounded-2xl border border-neo-200/60 bg-white shadow-neo-lg animate-in">
+				<div
+					onClick={(e) => e.stopPropagation()}
+					className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-72 overflow-hidden rounded-2xl border border-neo-200/60 bg-white shadow-neo-lg animate-in"
+				>
 					<div className="border-b border-neo-100 bg-gradient-to-br from-neo-50 to-white px-4 py-4">
 						<div className="flex items-center gap-3">
 							<div className="flex h-11 w-11 items-center justify-center rounded-full bg-neo-gradient text-sm font-bold text-white shadow-neo">
@@ -112,7 +121,31 @@ function UserProfileMenu() {
 									</label>
 									<LanguageSelect className="w-full" />
 								</div>
-								<ThemeSwitch />
+								<div className="flex flex-col gap-2">
+									<button
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
+											setOpenPersona(true);
+											setOpen(false);
+										}}
+										className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-neo-300 hover:bg-neo-50 hover:text-neo-700 active:translate-y-0 shadow-sm hover:shadow-md"
+									>
+										{t('app.profileSettings')}
+									</button>
+
+									<button
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
+											setOpenImport(true);
+											setOpen(false);
+										}}
+										className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-all duration-200 hover:-translate-y-0.5 hover:border-neo-300 hover:bg-neo-50 hover:text-neo-700 active:translate-y-0 shadow-sm hover:shadow-md"
+									>
+										{t('app.importJson')}
+									</button>
+								</div>
 							</div>
 						</div>
 
@@ -126,6 +159,15 @@ function UserProfileMenu() {
 					</div>
 				</div>
 			) : null}
+
+			<PersonaModal
+				open={openPersona}
+				onClose={() => setOpenPersona(false)}
+			/>
+			<BatchImportModal
+				open={openImport}
+				onClose={() => setOpenImport(false)}
+			/>
 		</div>
 	);
 }

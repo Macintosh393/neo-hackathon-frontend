@@ -32,7 +32,6 @@ function SessionDetailsModal({
 			onClose={onClose}
 			closeLabel={t('common.closeModal')}
 			title={t('calendar.sessionModalTitle')}
-			description={t('calendar.sessionModalDescription')}
 			footer={
 				<div className="flex flex-wrap items-center justify-end gap-3">
 					<button

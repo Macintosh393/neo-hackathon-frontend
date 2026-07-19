@@ -230,7 +230,10 @@ function buildDashboardResponse(language) {
 				sessionId: '55555555-5555-5555-5555-555555555553',
 				projectId: '22222222-2222-2222-2222-222222222223',
 				courseName: pickLocalized(MOCK_CONTENT.courses.uiEng, language),
-				title: pickLocalized(MOCK_CONTENT.sessions.shapeDashboardCards, language),
+				title: pickLocalized(
+					MOCK_CONTENT.sessions.shapeDashboardCards,
+					language,
+				),
 				startTime: '2026-07-18T20:00:00.000Z',
 				endTime: '2026-07-18T21:15:00.000Z',
 				status: 'COMPLETED',
@@ -284,6 +287,48 @@ function buildCalendarBuckets(startDate, endDate, language) {
 	return calendar;
 }
 
+// Inject extra sample sessions on today's date to visualize many events
+function injectTodaysSampleSessions(calendar, language) {
+	try {
+		const today = new Date();
+		const dayKey = format(today, 'yyyy-MM-dd');
+		const sampleTimes = [
+			['09:00:00.000Z', '10:00:00.000Z'],
+			['11:00:00.000Z', '12:30:00.000Z'],
+			['13:00:00.000Z', '14:00:00.000Z'],
+			['15:00:00.000Z', '16:00:00.000Z'],
+			['17:00:00.000Z', '18:30:00.000Z'],
+		];
+
+		calendar[dayKey] = calendar[dayKey] ?? { sessions: [], deadlines: [] };
+
+		for (let i = 0; i < sampleTimes.length; i++) {
+			const id = `sample-${i}-${Date.now()}`;
+			const title = `Sample Project ${i + 1}`;
+			const course = pickLocalized(MOCK_CONTENT.courses.webDev, language);
+			const startTime = `${dayKey}T${sampleTimes[i][0]}`;
+			const endTime = `${dayKey}T${sampleTimes[i][1]}`;
+
+			calendar[dayKey].sessions.push({
+				id,
+				projectId: `sample-project-${i}`,
+				title,
+				courseName: course,
+				startTime,
+				endTime,
+				durationMinutes: 60,
+				status: 'SCHEDULED',
+				isCompromised: false,
+				compromiseReason: null,
+			});
+		}
+	} catch {
+		// ignore in mock
+	}
+
+	return calendar;
+}
+
 /**
  * Why: the calendar page renders against a date-keyed hash map, so the mock must preserve that exact shape.
  * @param {string} startDate
@@ -297,13 +342,18 @@ export async function getCalendarView(startDate, endDate, language = 'uk') {
 	const totalDays =
 		differenceInCalendarDays(parseISO(endDate), parseISO(startDate)) + 1;
 
+	const calendar = buildCalendarBuckets(startDate, endDate, language);
+
+	// ensure today's date shows multiple projects for visual testing
+	injectTodaysSampleSessions(calendar, language);
+
 	return {
 		view: {
 			startDate,
 			endDate,
 			totalDays,
 		},
-		calendar: buildCalendarBuckets(startDate, endDate, language),
+		calendar,
 	};
 }
 

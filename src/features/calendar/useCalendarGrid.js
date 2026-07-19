@@ -15,8 +15,26 @@ import { getDateFnsLocale } from '../../i18n/formatters.js';
  * @param {string} [language='uk']
  * @returns {{ dates: Date[], startDate: string, endDate: string, monthLabel: string }}
  */
-function useCalendarGrid(currentMonthDate, language = 'uk') {
+function useCalendarGrid(
+	currentMonthDate,
+	language = 'uk',
+	viewMode = 'month',
+) {
 	const locale = getDateFnsLocale(language);
+	if (viewMode === 'week') {
+		const gridStart = startOfWeek(currentMonthDate, { weekStartsOn: 1 });
+		const dates = Array.from({ length: 7 }, (_, index) =>
+			addDays(gridStart, index),
+		);
+		const gridEnd = addDays(gridStart, 6);
+		return {
+			dates,
+			startDate: format(gridStart, 'yyyy-MM-dd'),
+			endDate: format(gridEnd, 'yyyy-MM-dd'),
+			monthLabel: `${format(gridStart, 'd LLL')} - ${format(gridEnd, 'd LLL yyyy')}`,
+		};
+	}
+
 	const gridStart = startOfWeek(startOfMonth(currentMonthDate), {
 		weekStartsOn: 1,
 	});

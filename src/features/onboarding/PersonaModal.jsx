@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { updateUserPersona } from '../../api/project.api.js';
 import Modal from '../../components/ui/Modal.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
+import useI18n from '../../i18n/useI18n.js';
 import useAuthStore from '../../store/useAuthStore.js';
 
 const DEFAULT_FORM = {
@@ -16,6 +17,8 @@ function PersonaModal({ open, onClose }) {
 	const user = useAuthStore((state) => state.user);
 	const token = useAuthStore((state) => state.token);
 	const setAuth = useAuthStore((state) => state.setAuth);
+	const { t } = useI18n();
+
 	const [form, setForm] = useState(() =>
 		user?.persona ? { ...DEFAULT_FORM, ...user.persona } : DEFAULT_FORM,
 	);
@@ -29,7 +32,7 @@ function PersonaModal({ open, onClose }) {
 			onClose?.();
 		},
 		onError: (error) => {
-			setLocalError(error?.message || 'Failed to save persona settings.');
+			setLocalError(error?.message || t('persona.error'));
 		},
 	});
 
@@ -57,19 +60,22 @@ function PersonaModal({ open, onClose }) {
 	return (
 		<Modal
 			open={open}
-			title="Define your study persona"
-			description="These constraints shape the AI scheduler and keep the calendar realistic."
+			title={t('persona.title')}
+			description={t('persona.description')}
 			onClose={onClose}
 			closable={!mutation.isPending}
 			footer={
 				<div className="flex items-center justify-end gap-3">
 					<button
 						type="button"
-						onClick={onClose}
+						onClick={(e) => {
+							e.stopPropagation();
+							onClose();
+						}}
 						disabled={mutation.isPending}
 						className="neo-btn-secondary disabled:cursor-not-allowed disabled:opacity-60"
 					>
-						Cancel
+						{t('persona.cancel')}
 					</button>
 					<button
 						type="submit"
@@ -77,7 +83,7 @@ function PersonaModal({ open, onClose }) {
 						disabled={mutation.isPending}
 						className="neo-btn-primary disabled:cursor-not-allowed disabled:opacity-60"
 					>
-						{mutation.isPending ? 'Saving...' : 'Save persona'}
+						{mutation.isPending ? t('persona.saving') : t('persona.save')}
 					</button>
 				</div>
 			}
@@ -91,7 +97,7 @@ function PersonaModal({ open, onClose }) {
 
 				<label className="block space-y-2">
 					<span className="text-sm font-medium text-slate-700">
-						Course year
+						{t('persona.courseYear')}
 					</span>
 					<input
 						type="number"
@@ -107,7 +113,7 @@ function PersonaModal({ open, onClose }) {
 				<div className="grid gap-4 sm:grid-cols-2">
 					<label className="block space-y-2">
 						<span className="text-sm font-medium text-slate-700">
-							Preferred time
+							{t('persona.preferredTime')}
 						</span>
 						<select
 							name="preferredTime"
@@ -115,15 +121,15 @@ function PersonaModal({ open, onClose }) {
 							onChange={handleChange}
 							className="neo-input"
 						>
-							<option value="morning">Morning</option>
-							<option value="afternoon">Afternoon</option>
-							<option value="evening">Evening</option>
+							<option value="morning">{t('persona.timeMorning')}</option>
+							<option value="afternoon">{t('persona.timeAfternoon')}</option>
+							<option value="evening">{t('persona.timeEvening')}</option>
 						</select>
 					</label>
 
 					<label className="block space-y-2">
 						<span className="text-sm font-medium text-slate-700">
-							Max hours per day
+							{t('persona.maxHoursPerDay')}
 						</span>
 						<input
 							type="number"
@@ -146,23 +152,18 @@ function PersonaModal({ open, onClose }) {
 						className="h-4 w-4 rounded border-neo-300 text-neo-600 focus:ring-neo-400"
 					/>
 					<span className="text-sm font-medium text-slate-700">
-						Allow weekend study sessions
+						{t('persona.studyOnWeekends')}
 					</span>
 				</label>
 
-				<div className="rounded-xl border border-neo-100 bg-neo-50/50 px-4 py-3 text-sm text-slate-600">
-					{mutation.isPending ? (
+				{mutation.isPending ? (
+					<div className="rounded-xl border border-neo-100 bg-neo-50/50 px-4 py-3 text-sm text-slate-600">
 						<div className="flex items-center justify-between gap-4">
-							<span>Saving persona settings...</span>
-							<Spinner label="Updating" />
+							<span>{t('persona.savingHint')}</span>
+							<Spinner label={t('common.updating')} />
 						</div>
-					) : (
-						<span>
-							These values will be reused by the scheduler and future calendar
-							calculations.
-						</span>
-					)}
-				</div>
+					</div>
+				) : null}
 			</form>
 		</Modal>
 	);

@@ -1,3 +1,5 @@
+import { createPortal } from 'react-dom';
+
 function CloseIcon() {
 	return (
 		<svg
@@ -8,7 +10,11 @@ function CloseIcon() {
 			strokeWidth={2}
 			aria-hidden="true"
 		>
-			<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+			<path
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d="M6 18L18 6M6 6l12 12"
+			/>
 		</svg>
 	);
 }
@@ -27,21 +33,22 @@ function Modal({
 		return null;
 	}
 
-	const handleBackdropClick = () => {
+	const handleBackdropClick = (e) => {
+		e.stopPropagation();
 		if (closable && onClose) {
 			onClose();
 		}
 	};
 
-	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
+	const modal = (
+		<div className="fixed inset-0 z-50 flex h-full w-full items-center justify-center px-4 py-6">
 			<button
 				type="button"
 				aria-label={closeLabel}
 				onClick={handleBackdropClick}
 				className="absolute inset-0 cursor-default bg-neo-950/60 backdrop-blur-sm"
 			/>
-			<div className="relative z-10 flex max-h-[calc(100vh-3rem)] w-full max-w-2xl animate-in flex-col overflow-hidden rounded-2xl border border-neo-200/30 bg-white shadow-neo-lg">
+			<div className="relative z-10 flex max-h-[calc(100vh-3rem)] w-full max-w-2xl animate-in flex-col overflow-hidden rounded-2xl border border-neo-200/30 bg-white shadow-neo-lg" onClick={(e) => e.stopPropagation()}>
 				<div className="flex items-start justify-between border-b border-neo-100 bg-gradient-to-r from-neo-50/50 to-white px-6 py-5">
 					<div className="pr-4">
 						{title ? (
@@ -56,7 +63,10 @@ function Modal({
 					{closable ? (
 						<button
 							type="button"
-							onClick={onClose}
+							onClick={(e) => {
+								e.stopPropagation();
+								onClose();
+							}}
 							aria-label={closeLabel}
 							className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-slate-500 transition-all duration-200 hover:bg-neo-50 hover:text-neo-700"
 						>
@@ -73,6 +83,12 @@ function Modal({
 			</div>
 		</div>
 	);
+
+	if (typeof document !== 'undefined' && document.body) {
+		return createPortal(modal, document.body);
+	}
+
+	return modal;
 }
 
 export default Modal;

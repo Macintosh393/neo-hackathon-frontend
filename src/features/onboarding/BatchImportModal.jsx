@@ -3,12 +3,15 @@ import { useState } from 'react';
 import { batchImportProjects } from '../../api/project.api.js';
 import Modal from '../../components/ui/Modal.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
+import { interpolate } from '../../i18n/formatters.js';
+import useI18n from '../../i18n/useI18n.js';
 
 const EMPTY_IMPORT = {
 	projects: [],
 };
 
 function BatchImportModal({ open, onClose }) {
+	const { t } = useI18n();
 	const [fileName, setFileName] = useState('');
 	const [payload, setPayload] = useState(EMPTY_IMPORT);
 	const [localError, setLocalError] = useState('');
@@ -22,7 +25,7 @@ function BatchImportModal({ open, onClose }) {
 			setLocalError('');
 		},
 		onError: (error) => {
-			setLocalError(error?.message || 'Failed to import projects.');
+			setLocalError(error?.message || t('import.error'));
 		},
 	});
 
@@ -40,13 +43,17 @@ function BatchImportModal({ open, onClose }) {
 			const parsed = JSON.parse(text);
 
 			if (!parsed || !Array.isArray(parsed.projects)) {
-				throw new Error('JSON must contain a projects array.');
+				throw new Error('invalid_schema');
 			}
 
 			setPayload({ projects: parsed.projects });
 		} catch (error) {
 			setPayload(EMPTY_IMPORT);
-			setLocalError(error?.message || 'Invalid JSON file.');
+			if (error.message === 'invalid_schema') {
+				setLocalError(t('import.invalidSchema'));
+			} else {
+				setLocalError(t('import.invalidJson'));
+			}
 		}
 	};
 
@@ -68,7 +75,7 @@ function BatchImportModal({ open, onClose }) {
 		setLocalError('');
 
 		if (!payload.projects.length) {
-			setLocalError('Upload a valid JSON file before importing.');
+			setLocalError(t('import.uploadError'));
 			return;
 		}
 
@@ -78,16 +85,16 @@ function BatchImportModal({ open, onClose }) {
 	return (
 		<Modal
 			open={open}
-			title="Import projects"
-			description="Drop a JSON file with a projects array and let the scheduler generate the study plan."
+			title={t('import.title')}
+			description={t('import.description')}
 			onClose={mutation.isPending ? undefined : onClose}
 			closable={!mutation.isPending}
 			footer={
 				<div className="flex items-center justify-between gap-3">
 					<div className="text-sm text-slate-500">
 						{fileName
-							? `Selected file: ${fileName}`
-							: 'Expected schema: { projects: [...] }'}
+							? interpolate(t('import.selectedFile'), { name: fileName })
+							: null}
 					</div>
 					<div className="flex items-center gap-3">
 						<button
@@ -96,7 +103,7 @@ function BatchImportModal({ open, onClose }) {
 							disabled={mutation.isPending}
 							className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
 						>
-							Close
+							{t('import.close')}
 						</button>
 						<button
 							type="submit"
@@ -105,8 +112,8 @@ function BatchImportModal({ open, onClose }) {
 							className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
 						>
 							{mutation.isPending
-								? 'Generating schedule...'
-								: 'Import projects'}
+								? t('import.generating')
+								: t('import.import')}
 						</button>
 					</div>
 				</div>
@@ -140,11 +147,9 @@ function BatchImportModal({ open, onClose }) {
 							: 'border-slate-300 bg-slate-50'
 					}`}
 				>
-					<p className="text-lg font-semibold text-slate-900">Drop JSON here</p>
+					<p className="text-lg font-semibold text-slate-900">{t('import.dropTitle')}</p>
 					<p className="mt-2 text-sm leading-6 text-slate-600">
-						The file must contain a top-level{' '}
-						<span className="font-mono">projects</span> array that matches the
-						swagger schema.
+						{t('import.dropHint')}
 					</p>
 					<div className="mt-5 flex justify-center">
 						<label className="inline-flex cursor-pointer items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">
@@ -154,29 +159,24 @@ function BatchImportModal({ open, onClose }) {
 								className="hidden"
 								onChange={handleFileChange}
 							/>
-							Choose JSON file
+							{t('import.chooseFile')}
 						</label>
 					</div>
 				</div>
 
-				<div className="relative rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-					{mutation.isPending ? (
+				{mutation.isPending ? (
+					<div className="relative rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
 						<div className="flex items-center justify-between gap-4">
-							<span>AI is parsing and scheduling your projects...</span>
-							<Spinner label="Processing" />
+							<span>{t('import.processing')}</span>
+							<Spinner label={t('import.processingLabel')} />
 						</div>
-					) : (
-						<span>
-							This step is intentionally blocking because the backend will later
-							run AI breakdown + scheduling here.
-						</span>
-					)}
-				</div>
+					</div>
+				) : null}
 
 				{mutation.isPending ? (
 					<div className="absolute inset-0 z-20 flex items-center justify-center bg-white/70 backdrop-blur-sm">
 						<div className="rounded-2xl border border-slate-200 bg-white px-6 py-5 shadow-lg">
-							<Spinner label="Generating schedule" />
+							<Spinner label={t('import.generatingLabel')} />
 						</div>
 					</div>
 				) : null}

@@ -27,7 +27,9 @@ function DashboardPage() {
 						<h2 className="mt-2 text-3xl font-bold text-slate-900">
 							{t('dashboard.greeting')}
 							{user?.name ? (
-								<span className="text-gradient-neo">, {user.name}</span>
+								<span className="text-gradient-neo">
+									, {user.name.trim().split(' ')[0]}
+								</span>
 							) : (
 								''
 							)}

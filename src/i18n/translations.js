@@ -17,6 +17,8 @@ const translations = {
 			profileMenu: 'Меню профілю',
 			closeMenu: 'Закрити меню',
 			footerTagline: 'Neoversity · Онлайн IT-університет',
+			profileSettings: 'Налаштування профілю',
+			importJson: 'Імпортувати JSON',
 		},
 		languages: {
 			uk: 'Українська',
@@ -32,8 +34,7 @@ const translations = {
 		dashboard: {
 			title: 'Панель',
 			greeting: 'Радий бачити тебе',
-			description:
-				'Спокійна панель прогресу для семестру. Вона використовує ту саму чисту календарну мову, але фокусується на мотивації, дедлайнах і сьогоднішній роботі.',
+			description: '',
 			statusMonth: 'Липень 2026',
 			statusReady: 'Розклад готовий',
 			loading: 'Завантаження даних панелі...',
@@ -57,6 +58,8 @@ const translations = {
 			previous: 'Попередній місяць',
 			next: 'Наступний місяць',
 			today: 'Сьогодні',
+			viewWeek: 'Тиждень',
+			viewMonth: 'Місяць',
 			more: 'ще',
 			sessionModalTitle: 'Деталі сесії',
 			sessionModalDescription: 'Оновіть статус навчальної сесії.',
@@ -171,6 +174,8 @@ const translations = {
 			profileMenu: 'Profile menu',
 			closeMenu: 'Close menu',
 			footerTagline: 'Neoversity · Online IT University',
+			profileSettings: 'Profile settings',
+			importJson: 'Import JSON',
 		},
 		languages: {
 			uk: 'Українська',
@@ -186,8 +191,7 @@ const translations = {
 		dashboard: {
 			title: 'Dashboard',
 			greeting: 'Good to see you',
-			description:
-				'A calm progress wall for your semester. The layout follows the same clean calendar language, but shifts the focus toward motivation, deadlines, and today’s work.',
+			description: '',
 			statusMonth: 'July 2026',
 			statusReady: 'Schedule ready',
 			loading: 'Loading dashboard statistics...',
@@ -211,6 +215,8 @@ const translations = {
 			previous: 'Previous month',
 			next: 'Next month',
 			today: 'Today',
+			viewWeek: 'Week',
+			viewMonth: 'Month',
 			more: 'more',
 			sessionModalTitle: 'Session details',
 			sessionModalDescription: 'Update the study session status.',
