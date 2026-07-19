@@ -145,6 +145,7 @@ function CalendarPage() {
 				isPending={updateSessionMutation.isPending}
 				onClose={() => setSelectedSession(null)}
 				onMarkCompleted={handleMarkCompleted}
+				onProjectClick={(projectId) => setSelectedProjectId(projectId)}
 			/>
 
 			<DayDetailsModal

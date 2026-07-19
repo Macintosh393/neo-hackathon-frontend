@@ -22,6 +22,7 @@ function SessionDetailsModal({
 	isPending,
 	onClose,
 	onMarkCompleted,
+	onProjectClick,
 }) {
 	const isOpen = Boolean(session);
 	const isCompleted = session?.status === 'COMPLETED';
@@ -75,6 +76,24 @@ function SessionDetailsModal({
 							</p>
 						</div>
 					</div>
+
+					{session.projectId ? (
+						<button
+							type="button"
+							onClick={() => {
+								onClose();
+								onProjectClick?.(session.projectId);
+							}}
+							className="w-full rounded-xl border border-neo-100 px-4 py-3 text-left transition-colors hover:border-neo-300 hover:bg-neo-50/50 group"
+						>
+							<p className="text-sm font-medium text-neo-600">
+								{t('calendar.sessionProject')}
+							</p>
+							<p className="mt-1 text-sm font-semibold text-neo-700 group-hover:text-neo-900 underline underline-offset-2 decoration-neo-300">
+								{session.title}
+							</p>
+						</button>
+					) : null}
 					<div className="rounded-xl border border-neo-100 px-4 py-3">
 						<p className="text-sm font-medium text-neo-600">
 							{t('calendar.sessionTime')}
