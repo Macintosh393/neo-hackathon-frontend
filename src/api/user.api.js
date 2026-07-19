@@ -36,3 +36,11 @@ export async function updateUserPersona(personaData) {
 	const response = await apiClient.put('/api/users/persona', personaData);
 	return response.data;
 }
+
+/**
+ * Reset all user data.
+ * @returns {Promise<void>}
+ */
+export async function resetUserData() {
+	await apiClient.delete('/api/users/me/data');
+}

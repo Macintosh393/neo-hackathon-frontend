@@ -19,6 +19,7 @@ const translations = {
 			footerTagline: 'Neoversity · Онлайн IT-університет',
 			profileSettings: 'Налаштування профілю',
 			importJson: 'Імпортувати JSON',
+			deleteData: 'Видалити дані',
 		},
 		languages: {
 			uk: 'Українська',
@@ -191,6 +192,7 @@ const translations = {
 			footerTagline: 'Neoversity · Online IT University',
 			profileSettings: 'Profile settings',
 			importJson: 'Import JSON',
+			deleteData: 'Delete data',
 		},
 		languages: {
 			uk: 'Українська',

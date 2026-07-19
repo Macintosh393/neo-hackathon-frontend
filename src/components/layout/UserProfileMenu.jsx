@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { resetUserData } from '../../api/user.api.js';
 import BatchImportModal from '../../features/onboarding/BatchImportModal.jsx';
 import PersonaModal from '../../features/onboarding/PersonaModal.jsx';
 import { interpolate } from '../../i18n/formatters.js';
@@ -32,6 +34,15 @@ function UserProfileMenu() {
 	const menuRef = useRef(null);
 	const [openPersona, setOpenPersona] = useState(false);
 	const [openImport, setOpenImport] = useState(false);
+	const queryClient = useQueryClient();
+
+	const resetMutation = useMutation({
+		mutationFn: resetUserData,
+		onSuccess: () => {
+			queryClient.invalidateQueries();
+			setOpen(false);
+		},
+	});
 
 	const displayName =
 		user?.name ||
@@ -152,13 +163,32 @@ function UserProfileMenu() {
 							</div>
 						</div>
 
-						<button
-							type="button"
-							onClick={handleLogout}
-							className="neo-btn-secondary w-full !border-rose-200 !text-rose-700 hover:!border-rose-300 hover:!bg-rose-50"
-						>
-							{t('app.logout')}
-						</button>
+						<div className="flex flex-col gap-2">
+							<button
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									if (
+										window.confirm(
+											'Are you sure you want to delete all your data?'
+										)
+									) {
+										resetMutation.mutate();
+									}
+								}}
+								disabled={resetMutation.isPending}
+								className="text-sm font-medium text-rose-500 underline transition-colors hover:text-rose-600 self-center mb-2"
+							>
+								{resetMutation.isPending ? '...' : t('app.deleteData')}
+							</button>
+							<button
+								type="button"
+								onClick={handleLogout}
+								className="neo-btn-secondary w-full !border-rose-200 !text-rose-700 hover:!border-rose-300 hover:!bg-rose-50"
+							>
+								{t('app.logout')}
+							</button>
+						</div>
 					</div>
 				</div>
 			) : null}
