@@ -168,6 +168,10 @@ function DashboardPage() {
 				isPending={updateSessionMutation.isPending}
 				onClose={() => setSelectedSession(null)}
 				onMarkCompleted={handleMarkCompleted}
+				onProjectClick={(projectId) => {
+					setSelectedSession(null);
+					setSelectedProjectId(projectId);
+				}}
 			/>
 		</section>
 	);
