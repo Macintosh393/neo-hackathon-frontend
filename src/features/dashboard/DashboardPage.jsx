@@ -155,6 +155,10 @@ function DashboardPage() {
 			<ProjectDetailsModal
 				projectId={selectedProjectId}
 				onClose={() => setSelectedProjectId(null)}
+				onSessionClick={(session) => {
+					setSelectedProjectId(null);
+					setSelectedSession(session);
+				}}
 			/>
 
 			<SessionDetailsModal
