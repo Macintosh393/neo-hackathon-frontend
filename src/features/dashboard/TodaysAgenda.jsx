@@ -27,7 +27,7 @@ function formatTime(isoString, language) {
 	);
 }
 
-function TodaysAgenda({ agenda }) {
+function TodaysAgenda({ agenda, onSessionClick }) {
 	const { t, language } = useI18n();
 	return (
 		<div className="neo-card-lg">
@@ -45,7 +45,11 @@ function TodaysAgenda({ agenda }) {
 
 			<div className="mt-5 space-y-3">
 				{agenda.map((item) => (
-					<div key={item.sessionId} className="neo-list-item group">
+					<div
+						key={item.sessionId}
+						onClick={() => onSessionClick?.(item)}
+						className="neo-list-item group cursor-pointer transition-all hover:border-neo-300 hover:shadow-neo/5"
+					>
 						<div className="flex flex-wrap items-start justify-between gap-3">
 							<div>
 								<p className="font-semibold text-slate-900 transition-colors group-hover:text-neo-700">

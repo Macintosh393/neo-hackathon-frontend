@@ -1,15 +1,56 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { getDashboardStats } from '../../api/dashboard.api.js';
+import { updateSession } from '../../api/session.api.js';
 import useI18n from '../../i18n/useI18n.js';
 import useAuthStore from '../../store/useAuthStore.js';
+import useToastStore from '../../store/useToastStore.js';
 import CourseList from './CourseList.jsx';
 import ProgressCircle from './ProgressCircle.jsx';
 import TodaysAgenda from './TodaysAgenda.jsx';
 import UpcomingDeadlines from './UpcomingDeadlines.jsx';
+import ProjectDetailsModal from '../calendar/ProjectDetailsModal.jsx';
+import SessionDetailsModal from '../calendar/SessionDetailsModal.jsx';
 
 function DashboardPage() {
+	const [selectedProjectId, setSelectedProjectId] = useState(null);
+	const [selectedSession, setSelectedSession] = useState(null);
+	const queryClient = useQueryClient();
 	const user = useAuthStore((state) => state.user);
 	const { t, language } = useI18n();
+
+	const updateSessionMutation = useMutation({
+		mutationFn: ({ id, payload }) => updateSession(id, payload),
+		onSuccess: (updatedSession) => {
+			setSelectedSession({
+				...updatedSession,
+				id: updatedSession.id || updatedSession.sessionId,
+			});
+			queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+			queryClient.invalidateQueries({ queryKey: ['calendar-view'] });
+			useToastStore.getState().addToast(t('calendar.sessionUpdated'), 'success');
+		},
+	});
+
+	const handleMarkCompleted = () => {
+		if (!selectedSession || selectedSession.status === 'COMPLETED') {
+			return;
+		}
+
+		updateSessionMutation.mutate({
+			id: selectedSession.id,
+			payload: {
+				status: 'COMPLETED',
+			},
+		});
+	};
+
+	const handleSessionClick = (item) => {
+		setSelectedSession({
+			...item,
+			id: item.sessionId || item.id,
+		});
+	};
 	const query = useQuery({
 		queryKey: ['dashboard', language],
 		queryFn: () => getDashboardStats(language),
@@ -30,7 +71,9 @@ function DashboardPage() {
 						<h2 className="mt-2 text-3xl font-bold text-slate-900">
 							{t('dashboard.greeting')}
 							{displayName ? (
-								<span className="text-gradient-neo">, {displayName}</span>
+								<span className="text-gradient-neo">
+									, {displayName.trim().split(' ')[0]}
+								</span>
 							) : (
 								''
 							)}
@@ -97,11 +140,39 @@ function DashboardPage() {
 					</div>
 
 					<div className="space-y-6">
-						<UpcomingDeadlines deadlines={data.upcomingDeadlines} />
-						<TodaysAgenda agenda={data.todaysAgenda} />
+						<UpcomingDeadlines
+							deadlines={data.upcomingDeadlines}
+							onProjectClick={setSelectedProjectId}
+						/>
+						<TodaysAgenda
+							agenda={data.todaysAgenda}
+							onSessionClick={handleSessionClick}
+						/>
 					</div>
 				</div>
 			) : null}
+
+			<ProjectDetailsModal
+				projectId={selectedProjectId}
+				onClose={() => setSelectedProjectId(null)}
+				onSessionClick={(session) => {
+					setSelectedProjectId(null);
+					setSelectedSession(session);
+				}}
+			/>
+
+			<SessionDetailsModal
+				session={selectedSession}
+				language={language}
+				t={t}
+				isPending={updateSessionMutation.isPending}
+				onClose={() => setSelectedSession(null)}
+				onMarkCompleted={handleMarkCompleted}
+				onProjectClick={(projectId) => {
+					setSelectedSession(null);
+					setSelectedProjectId(projectId);
+				}}
+			/>
 		</section>
 	);
 }

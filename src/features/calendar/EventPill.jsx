@@ -29,7 +29,7 @@ function EventPill({ title, courseName, status, isCompromised, onClick }) {
 			className={`neo-event-pill ${getPillClasses(status, isCompromised)} ${isInteractive ? 'neo-event-pill-interactive' : ''}`}
 		>
 			<p className="truncate font-semibold">{title}</p>
-			<p className="truncate opacity-75">{courseName}</p>
+			<p className="truncate opacity-75 hidden sm:block">{courseName}</p>
 		</Component>
 	);
 }

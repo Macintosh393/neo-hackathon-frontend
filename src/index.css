@@ -95,19 +95,19 @@
 	}
 
 	.neo-btn-primary {
-		@apply rounded-xl bg-neo-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-neo transition-all duration-200 hover:-translate-y-0.5 hover:shadow-neo-lg active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
+		@apply rounded-xl bg-neo-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-neo transition-all duration-200 hover:-translate-y-0.5 hover:shadow-neo-lg active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
 	}
 
 	.neo-btn-secondary {
-		@apply rounded-xl border border-neo-300/60 bg-white px-4 py-2.5 text-sm font-medium text-neo-700 transition-all duration-200 hover:border-neo-400 hover:bg-neo-50 hover:text-neo-800 disabled:cursor-not-allowed disabled:opacity-50;
+		@apply rounded-xl border border-neo-300/60 bg-white px-4 py-2.5 text-sm font-medium text-neo-700 transition-all duration-200 hover:border-neo-400 hover:bg-neo-50 hover:text-neo-800 active:bg-neo-100/60 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
 	}
 
 	.neo-btn-ghost {
-		@apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-neo-50 hover:text-neo-700;
+		@apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-neo-50 hover:text-neo-700 active:bg-neo-100/60;
 	}
 
 	.neo-nav-link {
-		@apply rounded-xl px-3.5 py-2 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-neo-50 hover:text-neo-700;
+		@apply rounded-xl px-3.5 py-2 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-neo-50 hover:text-neo-700 active:bg-neo-100/60;
 	}
 
 	.neo-nav-link-active {
@@ -119,7 +119,7 @@
 	}
 
 	.neo-badge-today {
-		@apply inline-flex h-7 w-7 items-center justify-center rounded-full bg-neo-gradient text-xs font-bold text-white shadow-neo;
+		@apply inline-flex h-5 w-5 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-neo-gradient text-[10px] sm:text-xs font-bold text-white shadow-neo;
 	}
 
 	.neo-progress-track {
@@ -134,12 +134,28 @@
 		@apply w-full rounded-xl border border-neo-200/60 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-200 focus:border-neo-400 focus:ring-2 focus:ring-neo-200;
 	}
 
+	select.neo-input {
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+		background-position: right 1rem center;
+		background-repeat: no-repeat;
+		background-size: 1rem 1rem;
+		padding-right: 2.75rem !important;
+		cursor: pointer;
+	}
+
+	select.neo-input:hover {
+		@apply border-neo-300 bg-neo-50/10 shadow-sm;
+	}
+
 	.neo-list-item {
 		@apply rounded-xl border border-neo-100/80 bg-gradient-to-br from-white to-neo-50/30 px-4 py-4 transition-all duration-200 hover:border-neo-200 hover:shadow-sm;
 	}
 
 	.neo-day-cell {
-		@apply min-h-[128px] rounded-xl border p-3 transition-all duration-200;
+		@apply min-h-[60px] sm:min-h-[120px] md:min-h-[128px] rounded-lg sm:rounded-xl border p-1 sm:p-2.5 transition-all duration-200;
 	}
 
 	.neo-day-cell-current {
@@ -155,7 +171,7 @@
 	}
 
 	.neo-event-pill {
-		@apply w-full rounded-lg border px-2 py-1 text-left text-[11px] leading-4 shadow-sm transition-all duration-200;
+		@apply w-full rounded-md sm:rounded-lg border px-1 sm:px-2 py-0.5 sm:py-1 text-left text-[9px] sm:text-[11px] leading-3 sm:leading-4 shadow-sm transition-all duration-200;
 	}
 
 	.neo-event-pill-interactive {
@@ -185,5 +201,36 @@
 
 	.animate-in {
 		animation: fadeIn 0.5s ease-out, slideUp 0.5s ease-out;
+	}
+
+	@keyframes dropdownFadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(-8px) scale(0.96);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	.animate-dropdown {
+		animation: dropdownFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		transform-origin: top;
+	}
+
+	/* Custom scrollbar for options dropdown */
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 6px;
+	}
+	.custom-scrollbar::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background: rgba(91, 24, 238, 0.25);
+		border-radius: 3px;
+	}
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: rgba(91, 24, 238, 0.4);
 	}
 }

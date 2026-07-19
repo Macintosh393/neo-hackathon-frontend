@@ -22,9 +22,9 @@ function DeadlinePill({ title, courseName, estimatedDifficulty, onClick }) {
 			onClick={onClick}
 			className={`neo-event-pill neo-deadline-pill border-2 ${getDeadlineClasses(estimatedDifficulty)} ${isInteractive ? 'neo-event-pill-interactive' : ''}`}
 		>
-			<p className="truncate font-bold uppercase text-[10px] tracking-wider mb-0.5">Deadline</p>
+			<p className="truncate font-bold uppercase text-[8px] tracking-wider mb-0.5 hidden sm:block">Deadline</p>
 			<p className="truncate font-semibold">{title}</p>
-			<p className="truncate opacity-75">{courseName}</p>
+			<p className="truncate opacity-75 hidden sm:block">{courseName}</p>
 		</Component>
 	);
 }

@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout.jsx';
+import ToastContainer from './components/ui/ToastContainer.jsx';
 import AuthGuard from './features/auth/AuthGuard.jsx';
 import LoginPage from './features/auth/LoginPage.jsx';
 import CalendarPage from './features/calendar/CalendarPage.jsx';
@@ -33,6 +34,7 @@ function App() {
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>
 			</HashRouter>
+			<ToastContainer />
 		</QueryClientProvider>
 	);
 }

@@ -10,7 +10,7 @@ function ProgressCircle({ percentage, label, sublabel }) {
 
 	return (
 		<div className="neo-card-lg">
-			<div className="flex items-center justify-between gap-4">
+			<div className="flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-4 text-center sm:text-left">
 				<div>
 					<p className="neo-label">{label}</p>
 					<p className="mt-2 text-3xl font-bold text-gradient-neo">
