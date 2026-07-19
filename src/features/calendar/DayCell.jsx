@@ -23,15 +23,15 @@ function DayCell({
 	const sessions = dayData?.sessions ?? [];
 	const deadlines = dayData?.deadlines ?? [];
 	const allItems = [
-		...sessions.map((item) => ({ ...item, itemType: 'session' })),
 		...deadlines.map((item) => ({ ...item, itemType: 'deadline' })),
+		...sessions.map((item) => ({ ...item, itemType: 'session' })),
 	];
 
 	const visibleItems = isWeek ? allItems : allItems.slice(0, 2);
 	const extraCount = allItems.length - visibleItems.length;
 	const extraItems = [
-		...sessions.map((item) => ({ ...item, itemType: 'session' })),
 		...deadlines.map((item) => ({ ...item, itemType: 'deadline' })),
+		...sessions.map((item) => ({ ...item, itemType: 'session' })),
 	].slice(2);
 	const [showExtras, setShowExtras] = useState(false);
 
