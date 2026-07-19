@@ -31,7 +31,7 @@ function useCalendarGrid(
 			dates,
 			startDate: format(gridStart, 'yyyy-MM-dd'),
 			endDate: format(gridEnd, 'yyyy-MM-dd'),
-			monthLabel: `${format(gridStart, 'd LLL')} - ${format(gridEnd, 'd LLL yyyy')}`,
+			monthLabel: `${format(gridStart, 'd LLL', { locale })} - ${format(gridEnd, 'd LLL yyyy', { locale })}`,
 		};
 	}
 
