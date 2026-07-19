@@ -31,7 +31,7 @@ function formatSessionTime(value, language) {
 	});
 }
 
-function ProjectDetailsModal({ projectId, onClose }) {
+function ProjectDetailsModal({ projectId, onClose, onSessionClick }) {
 	const { t, language } = useI18n();
 
 	const { data, isLoading, isError } = useQuery({
@@ -126,7 +126,19 @@ function ProjectDetailsModal({ projectId, onClose }) {
 						{data.sessions && data.sessions.length > 0 ? (
 							<div className="space-y-2 max-h-60 overflow-y-auto pr-1">
 								{data.sessions.map((session) => (
-									<div key={session.id} className="rounded-xl border border-neo-100 bg-white px-4 py-3 transition-colors hover:border-neo-200 space-y-2">
+									<button
+										key={session.id}
+										type="button"
+										onClick={() => {
+											onClose();
+											onSessionClick?.({
+												...session,
+												courseName: courseName,
+												projectId: projectId,
+											});
+										}}
+										className="w-full rounded-xl border border-neo-100 bg-white px-4 py-3 text-left transition-colors hover:border-neo-300 hover:bg-neo-50/50 space-y-2"
+									>
 										<div>
 											<p className="font-semibold text-slate-900 text-sm">
 												{session.title}
@@ -140,7 +152,7 @@ function ProjectDetailsModal({ projectId, onClose }) {
 												{translateStatus(t, session.status)}
 											</span>
 										</div>
-									</div>
+									</button>
 								))}
 							</div>
 						) : (
