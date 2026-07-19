@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import LanguageSelect from '../../components/ui/LanguageSelect.jsx';
+import { useGoogleLogin } from '@react-oauth/google';
+import { authenticateWithGoogle } from '../../api/auth.api.js';
 import useI18n from '../../i18n/useI18n.js';
 import useAuthStore from '../../store/useAuthStore.js';
 
@@ -8,26 +10,20 @@ function LoginPage() {
 	const setAuth = useAuthStore((state) => state.setAuth);
 	const { t } = useI18n();
 
-	const handleLogin = () => {
-		setAuth({
-			token: 'seeded-session-token',
-			user: {
-				id: '11111111-1111-1111-1111-111111111111',
-				name: 'Аміна Коваленко',
-				email: 'amina.kovalenko@university.edu',
-				avatar: 'АК',
-				role: 'Student',
-				program: 'software-engineering',
-				persona: {
-					courseYear: 3,
-					preferredTime: 'evening',
-					studyOnWeekends: true,
-					maxHoursPerDay: 4,
-				},
-			},
-		});
-		navigate('/dashboard', { replace: true });
-	};
+	const handleLogin = useGoogleLogin({
+		flow: 'auth-code',
+		scope: 'https://www.googleapis.com/auth/calendar',
+		onSuccess: async (codeResponse) => {
+			try {
+				const { token, user } = await authenticateWithGoogle(codeResponse.code);
+				setAuth({ token, user });
+				navigate('/dashboard', { replace: true });
+			} catch (error) {
+				console.error('Login failed', error);
+			}
+		},
+		onError: (error) => console.error('Login Failed', error),
+	});
 
 	return (
 		<div className="neo-hero-gradient neo-grid-bg relative flex min-h-screen items-center justify-center overflow-hidden px-4">
@@ -63,7 +59,7 @@ function LoginPage() {
 
 					<div className="mt-6 rounded-2xl border border-neo-100 bg-gradient-to-br from-neo-50 to-white px-4 py-3 text-sm text-slate-600">
 						{t('login.preloaded')}:{' '}
-						<span className="font-semibold text-neo-700">Аміна Коваленко</span>
+						<span className="font-semibold text-neo-700">Production Mode Active</span>
 					</div>
 
 					<button

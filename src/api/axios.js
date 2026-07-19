@@ -1,9 +1,9 @@
 import axios from 'axios';
 import useAuthStore from '../store/useAuthStore.js';
 
-// Why: keeping the backend base URL in one place lets us flip from mocks to real requests later without touching every feature.
+// Why: Use environment variables so we can easily point to different backend environments (local, staging, prod)
 const apiClient = axios.create({
-	baseURL: 'http://localhost:3000',
+	baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
 });
 
 function attachBearerToken(config, token) {
@@ -20,16 +20,8 @@ function attachBearerToken(config, token) {
 	config.headers.Authorization = `Bearer ${token}`;
 }
 
-function redirectToLogin() {
-	if (typeof window === 'undefined') {
-		return;
-	}
-
-	// Why: on a 401 the user should be moved out of the protected shell immediately, not after a stale screen lingers.
-	if (window.location.pathname !== '/login') {
-		window.location.assign('/login');
-	}
-}
+// Why: Rely on React Router / AuthGuard to perform the redirection
+// based on the updated Zustand state instead of forcefully reloading the SPA.
 
 apiClient.interceptors.request.use((config) => {
 	const token = useAuthStore.getState().token;
@@ -47,9 +39,9 @@ apiClient.interceptors.response.use(
 		const status = error?.response?.status;
 
 		if (status === 401) {
-			// Why: a 401 means our auth state is no longer valid, so we clear it before redirecting.
+			// Why: a 401 means our auth state is no longer valid, so we clear it.
+			// The <AuthGuard> component will automatically redirect the user to /login.
 			useAuthStore.getState().clearAuth();
-			redirectToLogin();
 		}
 
 		return Promise.reject(error);

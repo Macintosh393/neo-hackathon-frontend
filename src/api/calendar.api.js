@@ -1,5 +1,4 @@
-import { addDays, differenceInCalendarDays, format, parseISO } from 'date-fns';
-import { MOCK_CONTENT, pickLocalized } from './mockContent.js';
+import apiClient from './axios.js';
 
 /**
  * @typedef {'SCHEDULED'|'COMPLETED'|'MISSED'} StudySessionStatus
@@ -31,369 +30,40 @@ import { MOCK_CONTENT, pickLocalized } from './mockContent.js';
  * @typedef {Object} CalendarViewResponse
  * @property {{ startDate: string, endDate: string, totalDays: number }} view
  * @property {Record<string, CalendarDayBucket>} calendar
- *
- * @typedef {Object} OverallProgress
- * @property {number} totalProjects
- * @property {number} completedProjects
- * @property {number} totalSessions
- * @property {number} completedSessions
- * @property {number} percentage
- *
- * @typedef {Object} CourseProgress
- * @property {string} courseId
- * @property {string} courseName
- * @property {number} totalProjects
- * @property {number} completedProjects
- * @property {number} percentage
- *
- * @typedef {Object} UpcomingDeadline
- * @property {string} projectId
- * @property {string} courseName
- * @property {string} title
- * @property {string} deadline
- * @property {DifficultyLevel} estimatedDifficulty
- * @property {number} daysLeft
- * @property {number} progressPercentage
- *
- * @typedef {Object} TodaysAgendaItem
- * @property {string} sessionId
- * @property {string} projectId
- * @property {string} courseName
- * @property {string} title
- * @property {string} startTime
- * @property {string} endTime
- * @property {StudySessionStatus} status
- * @property {boolean} isCompromised
- * @property {string|null} [compromiseReason]
- *
- * @typedef {Object} DashboardResponse
- * @property {OverallProgress} overallProgress
- * @property {CourseProgress[]} coursesProgress
- * @property {UpcomingDeadline[]} upcomingDeadlines
- * @property {TodaysAgendaItem[]} todaysAgenda
- *
- * @typedef {Object} UpdateSessionInput
- * @property {string|null} [startTime]
- * @property {string|null} [endTime]
- * @property {StudySessionStatus} [status]
  */
 
-const MOCK_CALENDAR_SESSIONS = [
-	{
-		id: '55555555-5555-5555-5555-555555555551',
-		projectId: '22222222-2222-2222-2222-222222222222',
-		titleKey: 'designDataFlow',
-		courseKey: 'webDev',
-		startTime: '2026-07-22T18:00:00.000Z',
-		endTime: '2026-07-22T19:00:00.000Z',
-		durationMinutes: 60,
-		status: 'SCHEDULED',
-		isCompromised: false,
-		compromiseReasonKey: null,
-		dayOffset: 3,
-	},
-	{
-		id: '55555555-5555-5555-5555-555555555552',
-		projectId: '22222222-2222-2222-2222-222222222222',
-		titleKey: 'implementMonthGrid',
-		courseKey: 'webDev',
-		startTime: '2026-07-24T18:00:00.000Z',
-		endTime: '2026-07-24T19:30:00.000Z',
-		durationMinutes: 90,
-		status: 'SCHEDULED',
-		isCompromised: false,
-		compromiseReasonKey: null,
-		dayOffset: 5,
-	},
-	{
-		id: '55555555-5555-5555-5555-555555555553',
-		projectId: '22222222-2222-2222-2222-222222222223',
-		titleKey: 'shapeDashboardCards',
-		courseKey: 'uiEng',
-		startTime: '2026-07-25T18:00:00.000Z',
-		endTime: '2026-07-25T19:15:00.000Z',
-		durationMinutes: 75,
-		status: 'SCHEDULED',
-		isCompromised: true,
-		compromiseReasonKey: 'outsidePreferred',
-		dayOffset: 6,
-	},
-];
-
-const MOCK_CALENDAR_DEADLINES = [
-	{
-		projectId: '22222222-2222-2222-2222-222222222222',
-		titleKey: 'calendarGrid',
-		courseKey: 'webDev',
-		deadlineTime: '2026-08-02T23:59:00.000Z',
-		estimatedDifficulty: 'medium',
-		dayOffset: 14,
-	},
-	{
-		projectId: '22222222-2222-2222-2222-222222222223',
-		titleKey: 'dashboardViz',
-		courseKey: 'uiEng',
-		deadlineTime: '2026-08-08T23:59:00.000Z',
-		estimatedDifficulty: 'hard',
-		dayOffset: 20,
-	},
-];
-
-function localizeSession(entry, language) {
-	return {
-		id: entry.id,
-		projectId: entry.projectId,
-		title: pickLocalized(MOCK_CONTENT.sessions[entry.titleKey], language),
-		courseName: pickLocalized(MOCK_CONTENT.courses[entry.courseKey], language),
-		startTime: entry.startTime,
-		endTime: entry.endTime,
-		durationMinutes: entry.durationMinutes,
-		status: entry.status,
-		isCompromised: entry.isCompromised,
-		compromiseReason: entry.compromiseReasonKey
-			? pickLocalized(
-					MOCK_CONTENT.compromise[entry.compromiseReasonKey],
-					language,
-				)
-			: null,
-	};
-}
-
-function localizeDeadline(entry, language) {
-	return {
-		projectId: entry.projectId,
-		title: pickLocalized(MOCK_CONTENT.deadlines[entry.titleKey], language),
-		courseName: pickLocalized(MOCK_CONTENT.courses[entry.courseKey], language),
-		deadlineTime: entry.deadlineTime,
-		estimatedDifficulty: entry.estimatedDifficulty,
-	};
-}
-
-function buildDashboardResponse(language) {
-	return {
-		overallProgress: {
-			totalProjects: 6,
-			completedProjects: 2,
-			totalSessions: 18,
-			completedSessions: 7,
-			percentage: 39,
-		},
-		coursesProgress: [
-			{
-				courseId: '33333333-3333-3333-3333-333333333333',
-				courseName: pickLocalized(MOCK_CONTENT.courses.webDev, language),
-				totalProjects: 3,
-				completedProjects: 1,
-				percentage: 33,
-			},
-			{
-				courseId: '33333333-3333-3333-3333-333333333334',
-				courseName: pickLocalized(MOCK_CONTENT.courses.uiEng, language),
-				totalProjects: 3,
-				completedProjects: 1,
-				percentage: 50,
-			},
-		],
-		upcomingDeadlines: [
-			{
-				projectId: '22222222-2222-2222-2222-222222222222',
-				courseName: pickLocalized(MOCK_CONTENT.courses.webDev, language),
-				title: pickLocalized(MOCK_CONTENT.deadlines.calendarGrid, language),
-				deadline: '2026-08-02T23:59:00.000Z',
-				estimatedDifficulty: 'medium',
-				daysLeft: 15,
-				progressPercentage: 40,
-			},
-			{
-				projectId: '22222222-2222-2222-2222-222222222223',
-				courseName: pickLocalized(MOCK_CONTENT.courses.uiEng, language),
-				title: pickLocalized(MOCK_CONTENT.deadlines.dashboardViz, language),
-				deadline: '2026-08-08T23:59:00.000Z',
-				estimatedDifficulty: 'hard',
-				daysLeft: 21,
-				progressPercentage: 25,
-			},
-		],
-		todaysAgenda: [
-			{
-				sessionId: '55555555-5555-5555-5555-555555555551',
-				projectId: '22222222-2222-2222-2222-222222222222',
-				courseName: pickLocalized(MOCK_CONTENT.courses.webDev, language),
-				title: pickLocalized(MOCK_CONTENT.sessions.designDataFlow, language),
-				startTime: '2026-07-18T18:00:00.000Z',
-				endTime: '2026-07-18T19:00:00.000Z',
-				status: 'SCHEDULED',
-				isCompromised: false,
-				compromiseReason: null,
-			},
-			{
-				sessionId: '55555555-5555-5555-5555-555555555553',
-				projectId: '22222222-2222-2222-2222-222222222223',
-				courseName: pickLocalized(MOCK_CONTENT.courses.uiEng, language),
-				title: pickLocalized(
-					MOCK_CONTENT.sessions.shapeDashboardCards,
-					language,
-				),
-				startTime: '2026-07-18T20:00:00.000Z',
-				endTime: '2026-07-18T21:15:00.000Z',
-				status: 'COMPLETED',
-				isCompromised: true,
-				compromiseReason: pickLocalized(
-					MOCK_CONTENT.compromise.fallbackSlot,
-					language,
-				),
-			},
-		],
-	};
-}
-
-function wait(ms) {
-	return new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
-}
-
-function isWithinRange(dateValue, startDate, endDate) {
-	return dateValue >= startDate && dateValue <= endDate;
-}
-
-function buildCalendarBuckets(startDate, endDate, language) {
-	const start = parseISO(startDate);
-	const end = parseISO(endDate);
-	const calendar = {};
-
-	for (const entry of MOCK_CALENDAR_SESSIONS) {
-		const bucketDate = addDays(start, entry.dayOffset);
-		if (!isWithinRange(bucketDate, start, end)) {
-			continue;
-		}
-
-		const dayKey = format(bucketDate, 'yyyy-MM-dd');
-		calendar[dayKey] = calendar[dayKey] ?? { sessions: [], deadlines: [] };
-		calendar[dayKey].sessions.push(localizeSession(entry, language));
-	}
-
-	for (const entry of MOCK_CALENDAR_DEADLINES) {
-		const bucketDate = addDays(start, entry.dayOffset);
-		if (!isWithinRange(bucketDate, start, end)) {
-			continue;
-		}
-
-		const dayKey = format(bucketDate, 'yyyy-MM-dd');
-		calendar[dayKey] = calendar[dayKey] ?? { sessions: [], deadlines: [] };
-		calendar[dayKey].deadlines.push(localizeDeadline(entry, language));
-	}
-
-	return calendar;
-}
-
-// Inject extra sample sessions on today's date to visualize many events
-function injectTodaysSampleSessions(calendar, language) {
-	try {
-		const today = new Date();
-		const dayKey = format(today, 'yyyy-MM-dd');
-		const sampleTimes = [
-			['09:00:00.000Z', '10:00:00.000Z'],
-			['11:00:00.000Z', '12:30:00.000Z'],
-			['13:00:00.000Z', '14:00:00.000Z'],
-			['15:00:00.000Z', '16:00:00.000Z'],
-			['17:00:00.000Z', '18:30:00.000Z'],
-		];
-
-		calendar[dayKey] = calendar[dayKey] ?? { sessions: [], deadlines: [] };
-
-		for (let i = 0; i < sampleTimes.length; i++) {
-			const id = `sample-${i}-${Date.now()}`;
-			const title = `Sample Project ${i + 1}`;
-			const course = pickLocalized(MOCK_CONTENT.courses.webDev, language);
-			const startTime = `${dayKey}T${sampleTimes[i][0]}`;
-			const endTime = `${dayKey}T${sampleTimes[i][1]}`;
-
-			calendar[dayKey].sessions.push({
-				id,
-				projectId: `sample-project-${i}`,
-				title,
-				courseName: course,
-				startTime,
-				endTime,
-				durationMinutes: 60,
-				status: 'SCHEDULED',
-				isCompromised: false,
-				compromiseReason: null,
-			});
-		}
-	} catch {
-		// ignore in mock
-	}
-
-	return calendar;
-}
-
 /**
- * Why: the calendar page renders against a date-keyed hash map, so the mock must preserve that exact shape.
+ * Fetch the calendar hash map for rendering the grid.
  * @param {string} startDate
  * @param {string} endDate
- * @param {string} [language='uk']
  * @returns {Promise<CalendarViewResponse>}
  */
-export async function getCalendarView(startDate, endDate, language = 'uk') {
-	await wait(300);
-
-	const totalDays =
-		differenceInCalendarDays(parseISO(endDate), parseISO(startDate)) + 1;
-
-	const calendar = buildCalendarBuckets(startDate, endDate, language);
-
-	// ensure today's date shows multiple projects for visual testing
-	injectTodaysSampleSessions(calendar, language);
-
-	return {
-		view: {
-			startDate,
-			endDate,
-			totalDays,
-		},
-		calendar,
-	};
+export async function getCalendarView(startDate, endDate) {
+	const response = await apiClient.get('/api/calendar/view', {
+		params: { startDate, endDate },
+	});
+	return response.data;
 }
 
 /**
- * Why: dashboard widgets should be able to render immediately against a stable aggregated payload.
- * @param {string} [language='uk']
- * @returns {Promise<DashboardResponse>}
+ * Sync scheduled sessions to Google Calendar.
+ * @param {string} [startDate]
+ * @param {string} [endDate]
+ * @returns {Promise<{message: string, scheduledSessionsCount: number}>}
  */
-export async function getDashboard(language = 'uk') {
-	await wait(300);
-
-	return buildDashboardResponse(language);
+export async function syncToGoogleCalendar(startDate, endDate) {
+	const response = await apiClient.post('/api/calendar/sync', null, {
+		params: { startDate, endDate },
+	});
+	return response.data;
 }
 
 /**
- * Why: calendar interactions should update a single session and immediately refresh cached views.
- * @param {string} id
- * @param {UpdateSessionInput} payload
- * @param {string} [language='uk']
- * @returns {Promise<CalendarSessionEntry>}
+ * Recalculate missed sessions.
+ * @returns {Promise<{message: string, rescheduledSessionsCount: number}>}
  */
-export async function updateStudySession(id, payload, language = 'uk') {
-	await wait(300);
-
-	const session = MOCK_CALENDAR_SESSIONS.find((entry) => entry.id === id);
-	if (!session) {
-		throw new Error('Session not found');
-	}
-
-	if (payload.status) {
-		session.status = payload.status;
-	}
-
-	if ('startTime' in payload) {
-		session.startTime = payload.startTime;
-	}
-
-	if ('endTime' in payload) {
-		session.endTime = payload.endTime;
-	}
-
-	return localizeSession(session, language);
+export async function recalculateCalendar() {
+	const response = await apiClient.post('/api/calendar/recalculate');
+	return response.data;
 }
+

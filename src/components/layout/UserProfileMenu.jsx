@@ -33,7 +33,10 @@ function UserProfileMenu() {
 	const [openPersona, setOpenPersona] = useState(false);
 	const [openImport, setOpenImport] = useState(false);
 
-	const displayName = user?.name ?? 'Аміна Коваленко';
+	const displayName =
+		user?.name ||
+		[user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
+		'User';
 	const avatar = user?.avatar ?? displayName.slice(0, 2).toUpperCase();
 	const program = t('app.program');
 	const courseYear = user?.persona?.courseYear ?? 3;

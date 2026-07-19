@@ -2,7 +2,7 @@ import { format, isSameMonth, isToday } from 'date-fns';
 import { useState } from 'react';
 import useI18n from '../../i18n/useI18n.js';
 import EventPill from './EventPill.jsx';
-
+import DeadlinePill from './DeadlinePill.jsx';
 /**
  * Why: DayCell is the place where a single date resolves into a handful of visible rows.
  * Keeping the hash-map lookup here preserves O(1) access in the grid renderer.
@@ -57,20 +57,25 @@ function DayCell({
 			</div>
 
 			<div className="space-y-1.5">
-				{visibleItems.map((item) => (
-					<EventPill
-						key={`${item.itemType}-${item.id ?? item.projectId}-${item.title}`}
-						title={item.title}
-						courseName={item.courseName}
-						status={item.status ?? 'SCHEDULED'}
-						isCompromised={Boolean(item.isCompromised)}
-						onClick={
-							item.itemType === 'session' && onSessionClick
-								? () => onSessionClick(item)
-								: undefined
-						}
-					/>
-				))}
+				{visibleItems.map((item) =>
+					item.itemType === 'deadline' ? (
+						<DeadlinePill
+							key={`${item.itemType}-${item.projectId}-${item.title}`}
+							title={item.title}
+							courseName={item.courseName}
+							estimatedDifficulty={item.estimatedDifficulty}
+						/>
+					) : (
+						<EventPill
+							key={`${item.itemType}-${item.id ?? item.projectId}-${item.title}`}
+							title={item.title}
+							courseName={item.courseName}
+							status={item.status ?? 'SCHEDULED'}
+							isCompromised={Boolean(item.isCompromised)}
+							onClick={onSessionClick ? () => onSessionClick(item) : undefined}
+						/>
+					)
+				)}
 
 				{extraCount > 0 ? (
 					<div

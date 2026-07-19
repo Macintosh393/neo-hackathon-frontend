@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addMonths, addWeeks, format, subMonths, subWeeks } from 'date-fns';
 import { useState } from 'react';
-import { getCalendarView, updateStudySession } from '../../api/calendar.api.js';
+import { getCalendarView } from '../../api/calendar.api.js';
+import { updateSession } from '../../api/session.api.js';
 import useI18n from '../../i18n/useI18n.js';
 import CalendarHeader from './CalendarHeader.jsx';
 import DayDetailsModal from './DayDetailsModal.jsx';
@@ -24,7 +25,7 @@ function CalendarPage() {
 	});
 
 	const updateSessionMutation = useMutation({
-		mutationFn: ({ id, payload }) => updateStudySession(id, payload, language),
+		mutationFn: ({ id, payload }) => updateSession(id, payload),
 		onSuccess: (updatedSession) => {
 			setSelectedSession(updatedSession);
 			queryClient.invalidateQueries({ queryKey: ['calendar-view'] });

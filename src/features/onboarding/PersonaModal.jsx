@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { updateUserPersona } from '../../api/project.api.js';
+import { updateUserPersona } from '../../api/user.api.js';
 import Modal from '../../components/ui/Modal.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
 import useI18n from '../../i18n/useI18n.js';
