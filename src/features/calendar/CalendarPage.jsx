@@ -20,8 +20,8 @@ function CalendarPage() {
 	const grid = useCalendarGrid(currentMonthDate, language, viewMode);
 
 	const query = useQuery({
-		queryKey: ['calendar-view', grid.startDate, grid.endDate, language],
-		queryFn: () => getCalendarView(grid.startDate, grid.endDate, language),
+		queryKey: ['calendar-view', grid.queryStartDate, grid.queryEndDate, language],
+		queryFn: () => getCalendarView(grid.queryStartDate, grid.queryEndDate),
 	});
 
 	const updateSessionMutation = useMutation({
@@ -34,10 +34,11 @@ function CalendarPage() {
 	});
 
 	const calendar = query.data?.calendar ?? {};
-	const totalItems = Object.values(calendar).reduce(
-		(sum, bucket) => sum + bucket.sessions.length + bucket.deadlines.length,
-		0,
-	);
+	const totalItems = grid.dates.reduce((sum, date) => {
+		const dayKey = format(date, 'yyyy-MM-dd');
+		const bucket = calendar[dayKey] ?? { sessions: [], deadlines: [] };
+		return sum + bucket.sessions.length + bucket.deadlines.length;
+	}, 0);
 
 	const handleMarkCompleted = () => {
 		if (!selectedSession || selectedSession.status === 'COMPLETED') {
@@ -121,7 +122,7 @@ function CalendarPage() {
 				<div className="neo-stat-card">
 					<p className="neo-label">{t('calendar.daysInView')}</p>
 					<p className="mt-3 text-lg font-bold text-gradient-neo">
-						{query.data?.view.totalDays ?? 42}
+						{grid.dates.length}
 					</p>
 				</div>
 				<div className="neo-stat-card">

@@ -21,6 +21,14 @@ function useCalendarGrid(
 	viewMode = 'month',
 ) {
 	const locale = getDateFnsLocale(language);
+
+	// Always calculate the 42-day month grid range for API queries to avoid backend bugs with short ranges
+	const monthGridStart = startOfWeek(startOfMonth(currentMonthDate), {
+		weekStartsOn: 1,
+	});
+	const queryStartDate = format(monthGridStart, 'yyyy-MM-dd');
+	const queryEndDate = format(addDays(monthGridStart, 41), 'yyyy-MM-dd');
+
 	if (viewMode === 'week') {
 		const gridStart = startOfWeek(currentMonthDate, { weekStartsOn: 1 });
 		const dates = Array.from({ length: 7 }, (_, index) =>
@@ -31,6 +39,8 @@ function useCalendarGrid(
 			dates,
 			startDate: format(gridStart, 'yyyy-MM-dd'),
 			endDate: format(gridEnd, 'yyyy-MM-dd'),
+			queryStartDate,
+			queryEndDate,
 			monthLabel: `${format(gridStart, 'd LLL', { locale })} - ${format(gridEnd, 'd LLL yyyy', { locale })}`,
 		};
 	}
@@ -47,6 +57,8 @@ function useCalendarGrid(
 		dates,
 		startDate: format(gridStart, 'yyyy-MM-dd'),
 		endDate: format(gridEnd, 'yyyy-MM-dd'),
+		queryStartDate,
+		queryEndDate,
 		monthLabel: format(currentMonthDate, 'LLLL yyyy', { locale }),
 		hasOverflowIntoNextMonth: endOfMonth(currentMonthDate) < gridEnd,
 	};
