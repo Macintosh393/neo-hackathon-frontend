@@ -75,6 +75,7 @@ function DayCell({
 							courseName={item.courseName}
 							status={item.status ?? 'SCHEDULED'}
 							isCompromised={Boolean(item.isCompromised)}
+							compromiseReason={item.compromiseReason}
 							onClick={onSessionClick ? () => onSessionClick(item) : undefined}
 						/>
 					)
@@ -107,6 +108,7 @@ function DayCell({
 											courseName={item.courseName}
 											status={item.status ?? 'SCHEDULED'}
 											isCompromised={Boolean(item.isCompromised)}
+											compromiseReason={item.compromiseReason}
 											onClick={onSessionClick ? () => onSessionClick(item) : undefined}
 										/>
 									)
