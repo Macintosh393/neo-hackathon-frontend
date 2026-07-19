@@ -121,7 +121,13 @@ function SessionDetailsModal({
 
 					{/* Compromise warning */}
 					{session.isCompromised && session.compromiseReason ? (
-						<div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+						<div
+							className={`rounded-xl border px-4 py-3 text-sm ${
+								session.compromiseReason.toLowerCase().includes('deadline violated')
+									? 'border-rose-200 bg-rose-50 text-rose-800'
+									: 'border-amber-200 bg-amber-50 text-amber-800'
+							}`}
+						>
 							<p className="font-semibold">{t('calendar.compromiseLabel')}</p>
 							<p className="mt-1">{session.compromiseReason}</p>
 						</div>
