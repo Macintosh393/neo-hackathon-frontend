@@ -91,28 +91,30 @@ function DayCell({
 							+{extraCount} {t('calendar.more')}
 						</div>
 						{showExtras ? (
-							<div className={`absolute left-0 ${isLastRow ? 'bottom-full mb-1' : 'top-full mt-1'} z-50 w-64 rounded-lg border border-neo-200 bg-white p-3 shadow-lg space-y-1.5`}>
-								{extraItems.map((item, idx) =>
-									item.itemType === 'deadline' ? (
-										<DeadlinePill
-											key={`${item.itemType}-${item.projectId}-${item.title}-${idx}`}
-											title={item.title}
-											courseName={item.courseName}
-											estimatedDifficulty={item.estimatedDifficulty}
-											onClick={onProjectClick ? () => onProjectClick(item.projectId) : undefined}
-										/>
-									) : (
-										<EventPill
-											key={`${item.itemType}-${item.id ?? item.projectId}-${item.title}-${idx}`}
-											title={item.title}
-											courseName={item.courseName}
-											status={item.status ?? 'SCHEDULED'}
-											isCompromised={Boolean(item.isCompromised)}
-											compromiseReason={item.compromiseReason}
-											onClick={onSessionClick ? () => onSessionClick(item) : undefined}
-										/>
-									)
-								)}
+							<div className={`absolute left-0 ${isLastRow ? 'bottom-full pb-1' : 'top-full pt-1'} z-50 w-64`}>
+								<div className="rounded-lg border border-neo-200 bg-white p-3 shadow-lg space-y-1.5">
+									{extraItems.map((item, idx) =>
+										item.itemType === 'deadline' ? (
+											<DeadlinePill
+												key={`${item.itemType}-${item.projectId}-${item.title}-${idx}`}
+												title={item.title}
+												courseName={item.courseName}
+												estimatedDifficulty={item.estimatedDifficulty}
+												onClick={onProjectClick ? () => onProjectClick(item.projectId) : undefined}
+											/>
+										) : (
+											<EventPill
+												key={`${item.itemType}-${item.id ?? item.projectId}-${item.title}-${idx}`}
+												title={item.title}
+												courseName={item.courseName}
+												status={item.status ?? 'SCHEDULED'}
+												isCompromised={Boolean(item.isCompromised)}
+												compromiseReason={item.compromiseReason}
+												onClick={onSessionClick ? () => onSessionClick(item) : undefined}
+											/>
+										)
+									)}
+								</div>
 							</div>
 						) : null}
 					</div>
