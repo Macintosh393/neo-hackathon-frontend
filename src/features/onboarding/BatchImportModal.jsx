@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { batchImportProjects } from '../../api/project.api.js';
 import Modal from '../../components/ui/Modal.jsx';
@@ -18,11 +18,14 @@ function BatchImportModal({ open, onClose }) {
 	const [successMessage, setSuccessMessage] = useState('');
 	const [isDragging, setIsDragging] = useState(false);
 
+	const queryClient = useQueryClient();
+
 	const mutation = useMutation({
 		mutationFn: batchImportProjects,
 		onSuccess: (data) => {
 			setSuccessMessage(data.message);
 			setLocalError('');
+			queryClient.invalidateQueries();
 		},
 		onError: (error) => {
 			setLocalError(error?.message || t('import.error'));

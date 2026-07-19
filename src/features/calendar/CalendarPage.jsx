@@ -30,7 +30,7 @@ function CalendarPage() {
 	const updateSessionMutation = useMutation({
 		mutationFn: ({ id, payload }) => updateSession(id, payload),
 		onSuccess: (updatedSession) => {
-			setSelectedSession(updatedSession);
+			setSelectedSession((prev) => ({ ...prev, ...updatedSession }));
 			queryClient.invalidateQueries({ queryKey: ['calendar-view'] });
 			queryClient.invalidateQueries({ queryKey: ['dashboard'] });
 			useToastStore.getState().addToast(t('calendar.sessionUpdated'), 'success');
