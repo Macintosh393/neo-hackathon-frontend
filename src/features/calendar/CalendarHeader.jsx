@@ -1,4 +1,6 @@
 import useI18n from '../../i18n/useI18n.js';
+import Select from '../../components/ui/Select.jsx';
+
 
 function CalendarHeader({
 	monthLabel,
@@ -10,7 +12,7 @@ function CalendarHeader({
 }) {
 	const { t } = useI18n();
 	return (
-		<div className="neo-card-lg flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3">
+		<div className="neo-card-lg relative z-20 flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3">
 			<div className="flex items-center gap-2">
 				<button
 					type="button"
@@ -69,15 +71,16 @@ function CalendarHeader({
 			</div>
 
 			<div className="flex items-center gap-2">
-				<select
-					aria-label="View mode"
+				<Select
+					ariaLabel="View mode"
 					value={viewMode}
-					onChange={(e) => onToggleView?.(e.target.value)}
-					className="neo-input w-36"
-				>
-					<option value="week">{t('calendar.viewWeek')}</option>
-					<option value="month">{t('calendar.viewMonth')}</option>
-				</select>
+					onChange={onToggleView}
+					options={[
+						{ value: 'week', label: t('calendar.viewWeek') },
+						{ value: 'month', label: t('calendar.viewMonth') },
+					]}
+					className="w-48"
+				/>
 			</div>
 		</div>
 	);

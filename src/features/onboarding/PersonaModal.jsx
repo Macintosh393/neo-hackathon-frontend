@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { updateUserPersona } from '../../api/user.api.js';
 import Modal from '../../components/ui/Modal.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
+import Select from '../../components/ui/Select.jsx';
+
 import useI18n from '../../i18n/useI18n.js';
 import useAuthStore from '../../store/useAuthStore.js';
 import useToastStore from '../../store/useToastStore.js';
@@ -117,16 +119,16 @@ function PersonaModal({ open, onClose }) {
 						<span className="text-sm font-medium text-slate-700">
 							{t('persona.preferredTime')}
 						</span>
-						<select
+						<Select
 							name="preferredTime"
 							value={form.preferredTime}
 							onChange={handleChange}
-							className="neo-input"
-						>
-							<option value="morning">{t('persona.timeMorning')}</option>
-							<option value="afternoon">{t('persona.timeAfternoon')}</option>
-							<option value="evening">{t('persona.timeEvening')}</option>
-						</select>
+							options={[
+								{ value: 'morning', label: t('persona.timeMorning') },
+								{ value: 'afternoon', label: t('persona.timeAfternoon') },
+								{ value: 'evening', label: t('persona.timeEvening') },
+							]}
+						/>
 					</label>
 
 					<label className="block space-y-2">
