@@ -57,10 +57,7 @@ function LoginPage() {
 						{t('login.description')}
 					</p>
 
-					<div className="mt-6 rounded-2xl border border-neo-100 bg-gradient-to-br from-neo-50 to-white px-4 py-3 text-sm text-slate-600">
-						{t('login.preloaded')}:{' '}
-						<span className="font-semibold text-neo-700">Production Mode Active</span>
-					</div>
+
 
 					<button
 						type="button"
