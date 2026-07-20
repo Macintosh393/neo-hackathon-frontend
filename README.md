@@ -14,6 +14,26 @@ This is the frontend client for the Neoversity Hackathon project. It is a modern
 - **Calendar Engine**: [FullCalendar](https://fullcalendar.io/)
 - **Internationalization (i18n)**: [i18next](https://www.i18next.com/) (Ukrainian & English support)
 
+## ⚖️ Note for Judges / Evaluators
+
+### 1. Application Access (Google OAuth)
+If you would like to test the application, **you must first be added to the Google test users list**. 
+
+Because this application integrates with Google OAuth and the Google Calendar API, public access requires a full app verification process by Google. Since verification can take weeks, the app currently operates in "test mode."
+* **Action required:** Please provide the exact email addresses you plan to use for logging in so I can manually grant you access.
+
+### 2. Data Cleanup
+After you are done testing the application, it is highly recommended to delete your data:
+1. Open the **Profile** pop-up.
+2. Click **"Delete data"**.
+
+*This action completely clears your data from the server's database and removes any study session events that the app created in your Google Calendar.*
+
+### 3. Test Data
+If you want to test the data upload feature, you can use the provided test file. 
+* **File:** `batch-import-test-data.json` (located in both repositories).
+* This file contains ready-to-upload test data and serves as an example of the JSON schema the website expects.
+
 ## 📁 Project Structure
 
 The project follows a feature-based architecture for better scalability and maintainability:
@@ -74,4 +94,4 @@ The app will be available at `http://localhost:5173`.
 2. **Onboarding**: Upon first login, you will be prompted to set your "Persona" (e.g., your major and course year).
 3. **Batch Import**: After setting your persona, you can upload a JSON file containing your syllabus or project deadlines. The backend AI will process this and automatically generate study sessions in your Google Calendar!
 4. **Dashboard**: View your overall progress, upcoming tasks, and today's schedule at a glance.
-5. **Calendar**: Navigate to the Calendar tab to see a detailed view of your study sessions. You can drag and drop sessions to reschedule them, and mark them as complete.
+5. **Calendar**: Navigate to the Calendar tab to see a detailed view of your study sessions.
